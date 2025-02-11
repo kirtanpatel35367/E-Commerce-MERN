@@ -16,7 +16,7 @@ import Accountpage from './pages/shopping-view/Accountpage';
 import CheckAuth from './components/common/CheckAuth';
 import Unauth from './pages/unAuthPage/Unauth';
 
-const isAuthanticated = true;
+const isAuthanticated = false;
 const user = {
   role: 'user'
 }
@@ -25,7 +25,7 @@ const user = {
 const App = () => {
   return (
     <div className='flex flex-col overflow-hidden bg-white'>
-      <h1>Header Component</h1>
+      {/* <h1>Header Component</h1> */}
 
       {/* Authantication Part */}
       <Routes>

@@ -2,7 +2,7 @@ import React from 'react'
 
 const AdminDashBoard = () => {
   return (
-    <div>
+    <div className='flex justify-center rounded-md'>
       Admin DashBoard
     </div>
   )

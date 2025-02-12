@@ -20,11 +20,16 @@ const Authregister = () => {
 
     const onsubmit = (e) => {
         e.preventDefault()
-        dispatch(registerUser(formData)).then((data) => {
+        dispatch(registerUser(formData)).then((data) => {        //Data Returned From API
             if (data?.payload?.sucess) {
                 navigate('/auth/login')
                 toast({
-                    title: "Registration Succesfully",
+                    title: data?.payload.message,
+                })
+            }
+            else {
+                toast({
+                    title: data?.payload.message
                 })
             }
         }

@@ -1,5 +1,6 @@
-import React from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useEffect } from 'react'
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import HashLoader from "react-spinners/ClipLoader";
 import AuthLayout from './components/auth/layout';
 import Authlogin from './pages/auth/login';
 import Authregister from './pages/auth/register';
@@ -15,16 +16,28 @@ import CheckOut from './pages/shopping-view/CheckOut';
 import Accountpage from './pages/shopping-view/Accountpage';
 import CheckAuth from './components/common/CheckAuth';
 import Unauth from './pages/unAuthPage/Unauth';
-
-const isAuthanticated = false;
-const user = {
-  role: 'user'
-}
+import { useDispatch, useSelector } from 'react-redux';
+import { checkAuth } from './store/auth-alice';
 
 
 const App = () => {
+
+  const { user, isAuthanticated, isLoading } = useSelector(state => state.auth)
+  const dispatch = useDispatch()
+  const location = useLocation()
+
+  useEffect(() => {
+    dispatch(checkAuth())
+  }, [dispatch])  
+
+  console.log(isLoading, user)
+  console.log(location.pathname,isLoading)
+
+
   return (
-    <div className='flex flex-col overflow-hidden bg-white'>
+    isLoading ? (
+      <div><HashLoader color="#FF725E" /></div>
+    ) : (<><div className='flex flex-col overflow-hidden bg-white'>
       {/* <h1>Header Component</h1> */}
 
       {/* Authantication Part */}
@@ -64,6 +77,7 @@ const App = () => {
         <Route path='*' element={<PageNotFound />}></Route>
       </Routes>
     </div>
+    </>)
   )
 }
 

@@ -2,22 +2,31 @@ import React from 'react'
 import { CgMenuLeftAlt } from "react-icons/cg";
 import { IoIosLogOut } from "react-icons/io";
 import { Button } from '../ui/button';
+import { useDispatch, useSelector } from 'react-redux';
+import { UserLogout } from '@/store/auth-alice';
 
 
-const Adminheader = () => {
+const Adminheader = ({ setOpen }) => {
+    const { isAuthanticated } = useSelector((state) => state.auth)
+    console.log(isAuthanticated)
+    const dispatch = useDispatch()
+
+    const handleLogout = () => {
+        dispatch(UserLogout())
+    }
+
     return (
-        <div className='flex items-center justify-between opacity-95 bg-slate-800 p-3  '>
-            <Button className='lg:hidden sm:block '>
+        <div className='flex items-center justify-between shadow-sm shadow-slate-800  bg-slate-800 p-3'>
+            <Button onClick={() => setOpen(true)} className='lg:hidden sm:block'>
                 <CgMenuLeftAlt />
                 <span className='sr-only'>Toggle Menu</span>
             </Button>
-            <div className='flex flex-1 justify-end'>
-                <Button className='inline-flex gap-2 bg-slate-50 text-slate-800 items-center rounded-md'>
+            <div className='flex flex-1 text-center  justify-end'>
+                <Button onClick={handleLogout} className='inline-flex gap-2 text-sm bg-slate-50 text-slate-800 items-center rounded-md hover:text-white'>
                     <IoIosLogOut />
                     Log Out
                 </Button>
             </div>
-
         </div>
     )
 }

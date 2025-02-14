@@ -5,7 +5,7 @@ import axios from "axios";
 
 const initialState = {
     isAuthanticated: false,
-    isLoading: false,
+    isLoading: true,
     user: null,
 }
 
@@ -33,7 +33,21 @@ export const checkAuth = createAsyncThunk('/auth/check-auth',
     }
 )
 
+//LogOut User
+export const UserLogout = createAsyncThunk('/auth/logout',
+    async () => {
+        const response = await axios.post('http://localhost:9000/api/auth/logout', {
+            withCredentials: true,
+        })
 
+        return response.data
+    }
+)
+
+
+
+
+//Login User
 export const loginUser = createAsyncThunk('/auth/login',
     async (formData) => {
         const response = await axios.post('http://localhost:9000/api/auth/login', formData, {
@@ -54,6 +68,7 @@ const authSlice = createSlice({
         setUser: (state, action) => {
 
         },
+        
     },
     extraReducers: (builder) => {
         builder.addCase(registerUser.pending, (state) => {
@@ -94,6 +109,18 @@ const authSlice = createSlice({
                 state.isLoading = false,
                     state.user = null
                 state.isAuthanticated = false
+            })
+            .addCase(UserLogout.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(UserLogout.fulfilled, (state, action) => {
+                console.log(action)
+                state.isLoading = false,
+                    state.user = null,
+                    state.isAuthanticated = false
+            })
+            .addCase(UserLogout.rejected, (state) => {
+                state.isLoading = false
             })
     }
 })

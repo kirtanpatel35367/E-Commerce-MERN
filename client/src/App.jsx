@@ -28,15 +28,16 @@ const App = () => {
 
   useEffect(() => {
     dispatch(checkAuth())
-  }, [dispatch])  
+  }, [dispatch])
 
-  console.log(isLoading, user)
-  console.log(location.pathname,isLoading)
+  // console.log(isLoading, user)
+  // console.log(location.pathname,isLoading)
 
 
   return (
     isLoading ? (
-      <div><HashLoader color="#FF725E" /></div>
+      <div className='flex justify-center items-center h-[100vh]'><HashLoader color="#113150" />
+      </div>
     ) : (<><div className='flex flex-col overflow-hidden bg-white'>
       {/* <h1>Header Component</h1> */}
 

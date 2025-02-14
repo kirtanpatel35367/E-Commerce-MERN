@@ -44,7 +44,7 @@ const CommonForm = ({ formControls, formData, setFormData, buttontext, onsubmit 
                                 {
                                     formControlItem.options && formControlItem.options.length != 0 ?
                                         formControlItem.options.map((option) =>
-                                            <SelectItem key={option.id} value={option.value} >{option.label}</SelectItem>
+                                            <SelectItem key={option.id} value={option.id} >{option.label}</SelectItem>
                                         ) : <></>
                                 }
                             </SelectGroup>
@@ -78,7 +78,7 @@ const CommonForm = ({ formControls, formData, setFormData, buttontext, onsubmit 
     return (
         <>
             <form action="" onSubmit={onsubmit}>
-                <div className='flex flex-col gap-3'>
+                <div className='flex flex-col gap-3 font-HeadFont'>
                     {
                         formControls && formControls.map((controlItem) =>
                             <div key={controlItem.name} className='grid w-full space-y-3 '>
@@ -87,7 +87,7 @@ const CommonForm = ({ formControls, formData, setFormData, buttontext, onsubmit 
                             </div>
                         )
                     }
-                    <Button className="bg-[#FF725E] text-white"  type="submit" >{buttontext || 'submit'}</Button>
+                    <Button  type="submit" >{buttontext || 'submit'}</Button>
                 </div>
 
             </form>

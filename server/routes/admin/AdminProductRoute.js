@@ -6,8 +6,8 @@ const router = express.Router()
 
 router.post('/uploadImage', upload.single("Image_file"), handleImageUpload)
 router.post('/addProduct', addNewProduct)
-router.post('/fetchallproducts', fetchAllProducts)
-router.post('/deleteproduct/:id', deleteProduct)
-router.post('/editproduct/:id', editNewProducts)
+router.put('/editproduct/:id', editNewProducts)
+router.delete('/deleteproduct/:id', deleteProduct)
+router.get('/fetchallproducts', fetchAllProducts)
 
 module.exports = router

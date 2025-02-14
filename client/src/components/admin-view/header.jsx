@@ -3,7 +3,7 @@ import { CgMenuLeftAlt } from "react-icons/cg";
 import { IoIosLogOut } from "react-icons/io";
 import { Button } from '../ui/button';
 import { useDispatch, useSelector } from 'react-redux';
-import { UserLogout } from '@/store/auth-alice';
+import { UserLogout } from '@/store/auth-slice';
 
 
 const Adminheader = ({ setOpen }) => {

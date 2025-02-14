@@ -5,8 +5,9 @@ import { FaFileImage } from "react-icons/fa";
 import { Input } from "../ui/input"
 import { Button } from "../ui/button";
 import axios from "axios";
+import { Skeleton } from "../ui/skeleton";
 
-function ProductImageUpload({ imageFile, setImagefile, uploadImageUrl, setUploadImageUrl, setImageLoadingstate }) {
+function ProductImageUpload({ imageFile, setImagefile, uploadImageUrl, setUploadImageUrl, setImageLoadingstate, imageLoadingstate }) {
     const inputRef = useRef()
 
     function handleImageChange(e) {
@@ -17,7 +18,6 @@ function ProductImageUpload({ imageFile, setImagefile, uploadImageUrl, setUpload
 
     function handleDragOver(e) {
         e.preventDefault()
-
 
     }
 
@@ -39,8 +39,8 @@ function ProductImageUpload({ imageFile, setImagefile, uploadImageUrl, setUpload
         const data = new FormData()
         data.append('Image_file', imageFile)
         const response = await axios.post('http://localhost:9000/api/admin/products/uploadImage', data)
-        console.log(response.data)
-        if (response?.data?.success) setUploadImageUrl(response.data.result.url)
+        setImageLoadingstate(false)
+        if (response?.data?.sucess) { setUploadImageUrl(response.data.result.url) }
     }
 
     useEffect(() => {
@@ -48,6 +48,7 @@ function ProductImageUpload({ imageFile, setImagefile, uploadImageUrl, setUpload
             uploadImageCloudinary()
         }
     }, [imageFile])
+
 
     return (
         <div className="w-full max-w-md mx-auto">
@@ -61,7 +62,9 @@ function ProductImageUpload({ imageFile, setImagefile, uploadImageUrl, setUpload
                             <span>Drag and Drop Image Here</span>
                         </label>
                     ) : (
-                        <>
+                        imageLoadingstate ? (
+                            <Skeleton className='h-10 bg-gray-400' />
+                        ) : (<>
                             <div className="flex justify-around items-center gap-3">
                                 <div className="flex items-center">
                                     <FaFileImage className="text-lg" />
@@ -71,11 +74,12 @@ function ProductImageUpload({ imageFile, setImagefile, uploadImageUrl, setUpload
                                     <CiCircleRemove className="w-4 h-4" />
                                 </Button>
                             </div>
-                        </>
+                        </>)
+
                     )
                 }
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 

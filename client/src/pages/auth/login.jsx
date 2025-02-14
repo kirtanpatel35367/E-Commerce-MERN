@@ -1,7 +1,7 @@
 import CommonForm from '@/components/common/Form'
 import { LoginFormControl } from '@/config'
 import { useToast } from '@/hooks/use-toast'
-import { loginUser } from '@/store/auth-alice'
+import { loginUser } from '@/store/auth-slice'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'

@@ -7,7 +7,7 @@ const handleImageUpload = async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({
-                success: false,
+                sucess: false,
                 message: "No file uploaded!"
             });
         }
@@ -32,9 +32,15 @@ const handleImageUpload = async (req, res) => {
 }
 
 //Add New Product
-const addNewProduct = async () => {
+const addNewProduct = async (req, res) => {
     try {
         const { image, title, description, category, brand, price, salePrice, totalStock } = req.body
+
+        if (!image || !title || !description || !category || !brand || !price || !salePrice || !totalStock) return res.status(404).json({
+            sucess: false,
+            message: "Data is Not Provided"
+        })
+
         const newCreatedProduct = new Product({
             image, title, description, category, brand, price, salePrice, totalStock
         })
@@ -59,7 +65,7 @@ const addNewProduct = async () => {
 
 //Fetch All Product 
 
-const fetchAllProducts = async () => {
+const fetchAllProducts = async (req, res) => {
     try {
         const listOfAllProducts = await Product.find({})
         res.status(200).json({
@@ -79,7 +85,7 @@ const fetchAllProducts = async () => {
 
 //Edit  Product 
 
-const editNewProducts = async () => {
+const editNewProducts = async (req, res) => {
     try {
 
         const { id } = req.params

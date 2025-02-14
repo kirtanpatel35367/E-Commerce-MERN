@@ -17,7 +17,7 @@ import Accountpage from './pages/shopping-view/Accountpage';
 import CheckAuth from './components/common/CheckAuth';
 import Unauth from './pages/unAuthPage/Unauth';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkAuth } from './store/auth-alice';
+import { checkAuth } from './store/auth-slice';
 
 
 const App = () => {

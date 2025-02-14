@@ -3,7 +3,11 @@ import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import ProductImageUpload from '@/components/admin-view/image-upload'
 import { addProductFormElements } from '@/config'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import FetchAdminProducts from '../../components/admin-view/adminproduct'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchAllProducts, addNewProduct } from '@/store/admin/product-slice'
+import { useToast } from '@/hooks/use-toast'
 
 const AdminProducts = () => {
 
@@ -18,18 +22,54 @@ const AdminProducts = () => {
     totalStock: '',
   }
 
-  
-  const onsubmit = (e) => {
-    console.log(e.target.value)
-  }
-  
+
+
   const [openProductDialoge, setOpenProductDialoge] = useState(false)
   const [formData, setFormData] = useState(initialFormData)
   const [imageFile, setImagefile] = useState(null)
   const [uploadImageUrl, setUploadImageUrl] = useState("")
   const [imageLoadingstate, setImageLoadingstate] = useState(false)
-  
-  console.log(formData)
+  const [currentEditedId, setCurrentEditedId] = useState(null)
+  const dispatch = useDispatch()
+  const { productList } = useSelector((state) => state.adminproducts)
+  const { toast } = useToast()
+
+  const onsubmit = (e) => {
+    e.preventDefault()
+    dispatch(addNewProduct(
+      {
+        ...formData,
+        image: uploadImageUrl
+      }
+    )).then((data) => {
+      if (data?.payload?.sucess) {
+        dispatch(fetchAllProducts())
+        setOpenProductDialoge(false)
+        setImagefile(null)
+        setFormData(initialFormData)
+        toast({
+          title: data.payload.message,
+          variant: "success"
+        })
+        setOpenProductDialoge(false)
+      }
+      else {
+        toast({
+          title: data.payload.message,
+          variant: "destructive"
+        })
+        setOpenProductDialoge(false)
+      }
+    })
+  }
+
+  useEffect(() => {
+    dispatch(fetchAllProducts())
+  }, [dispatch])
+
+  console.log(productList)
+  console.log(uploadImageUrl)
+
   return (
     <>
       <div className='flex justify-end w-full'>
@@ -39,16 +79,21 @@ const AdminProducts = () => {
       </div>
 
       <div className='grid gap-4 md:grid-cols-3 lg:grid-cols-4'>
-        <Sheet open={openProductDialoge} onOpenChange={() => setOpenProductDialoge(false)}>
-          <SheetContent side='right' className='overflow-auto'>
-            <SheetHeader>
-              <SheetTitle className='mb-3 font-bold text-xl font-HeadFont'>Add New Product</SheetTitle>
-            </SheetHeader>
-            <ProductImageUpload imageFile={imageFile} setImagefile={setImagefile} uploadImageUrl={uploadImageUrl} setUploadImageUrl={setUploadImageUrl} setImageLoadingstate={setImageLoadingstate} />
-            <CommonForm formControls={addProductFormElements} formData={formData} setFormData={setFormData} buttontext='Add Item' onsubmit={onsubmit} />
-          </SheetContent>
-        </Sheet>
+        {
+          productList && productList.length > 0 ? productList.map((productItem) =>
+            <FetchAdminProducts key={productItem._id} formData={formData} setFormData={setFormData} currentEditedId={currentEditedId} setCurrentEditedId={setCurrentEditedId} setOpenProductDialoge={setOpenProductDialoge} product={productItem} />
+          ) : null
+        }
       </div>
+      <Sheet open={openProductDialoge} onOpenChange={() => setOpenProductDialoge(false)}>
+        <SheetContent side='right' className='overflow-auto'>
+          <SheetHeader>
+            <SheetTitle className='mb-3 font-bold text-xl font-HeadFont'>Add New Product</SheetTitle>
+          </SheetHeader>
+          <ProductImageUpload imageFile={imageFile} setImagefile={setImagefile} uploadImageUrl={uploadImageUrl} setUploadImageUrl={setUploadImageUrl} setImageLoadingstate={setImageLoadingstate} imageLoadingstate={imageLoadingstate} />
+          <CommonForm formControls={addProductFormElements} formData={formData} setFormData={setFormData} buttontext='Add Item' onsubmit={onsubmit} />
+        </SheetContent>
+      </Sheet>
     </>
   )
 }

@@ -22,7 +22,7 @@ const Authlogin = () => {
     event.preventDefault()
 
     dispatch(loginUser(formData)).then((data) => {    //Data is Payload what API Responce and Also Meta Data in This Form Data
-      if (data?.payload.sucess) {
+      if (data?.payload.success) {
         toast({
           title: data.payload.message,
           variant: "success"

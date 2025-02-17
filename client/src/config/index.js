@@ -84,20 +84,21 @@ export const addProductFormElements = [
         label: "Category",
         name: "category",
         componentType: "select",
-        placeholder:"Select Category",
+        placeholder: "Select Category",
         options: [
             { id: "men", label: "Men" },
             { id: "women", label: "Women" },
             { id: "kids", label: "Kids" },
             { id: "accessories", label: "Accessories" },
-            { id: "footwear", label: "Footwear" },
+            { id: "mobiles", label: "Mobiles" },
+            { id: "laptops", label: "Laptops" },
         ],
     },
     {
         label: "Brand",
         name: "brand",
         componentType: "select",
-        placeholder:"Select Category",
+        placeholder: "Select Category",
         options: [
             { id: "nike", label: "Nike" },
             { id: "adidas", label: "Adidas" },
@@ -105,6 +106,15 @@ export const addProductFormElements = [
             { id: "levi", label: "Levi's" },
             { id: "zara", label: "Zara" },
             { id: "h&m", label: "H&M" },
+            {
+                id: "samsung", label: "Samsung"
+            },
+            {
+                id: "apple", label: "Apple"
+            },
+            {
+                id: 'asus', label: "ASUS"
+            }
         ],
     },
     {
@@ -129,3 +139,93 @@ export const addProductFormElements = [
         placeholder: "Enter total stock",
     },
 ]
+
+export const shoppingViewHeaderMenuItems = [
+
+    {
+        id: 'all',
+        label: "All",
+        path: '/shop/productList'
+    },
+    {
+        id: 'Mobiles',
+        label: "mobiles",
+        path: '/shop/productList'
+    }, {
+        id: 'men',
+        label: "Men",
+        path: '/shop/productList'
+    }, {
+        id: 'Women',
+        label: "Women",
+        path: '/shop/productList'
+    },
+    {
+        id: 'kids',
+        label: "Kids",
+        path: '/shop/productList'
+    },
+    {
+        id: 'about us',
+        label: "About us",
+        path: '/*'
+    },
+    {
+        id: 'contactus',
+        label: "Contact Us",
+        path: '/*'
+    }
+]
+
+export const sortOptions = [
+    { id: "price-lowtohigh", label: "Price: Low to High" },
+    { id: "price-hightolow", label: "Price: High to Low" },
+    { id: "title-atoz", label: "Title: A to Z" },
+    { id: "title-ztoa", label: "Title: Z to A" },
+];
+
+export const CategoryOptionMap = {
+    "men": "Men",
+    "women": "Women",
+    "kids": "Kids",
+    "accessories": "Accessories",
+    "footwear": "Footware",
+    "mobiles": "Mobile",
+    "laptops": "Laptops"
+}
+
+export const BrandOptionMap = {
+    "nike": "Nike",
+    "zara": "Zara",
+    "h&m": "H&M",
+    "samsung": "Samsung",
+    "apple": "Apple",
+    "asus":"ASUS"
+}
+
+export const filterOptions = {
+    Category: [
+        { id: "men", label: "Men" },
+        { id: "women", label: "Women" },
+        { id: "kids", label: "Kids" },
+        { id: "accessories", label: "Accessories" },
+        { id: "footwear", label: "Footwear" },
+        { id: "mobiles", label: "Mobiles" },
+        { id: "laptops", label: "Laptops" },
+
+    ],
+    Brand: [
+        { id: "nike", label: "Nike" },
+        { id: "zara", label: "Zara" },
+        { id: "h&m", label: "H&M" },
+        {
+            id: "samsung", label: "Samsung"
+        },
+        {
+            id: "apple", label: "Apple"
+        },
+        {
+            id: 'asus', label: "ASUS"
+        }
+    ],
+};

@@ -4,15 +4,31 @@ import { IoIosLogOut } from "react-icons/io";
 import { Button } from '../ui/button';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserLogout } from '@/store/auth-slice';
+import { useToast } from '@/hooks/use-toast'
+
 
 
 const Adminheader = ({ setOpen }) => {
     const { isAuthanticated } = useSelector((state) => state.auth)
-    console.log(isAuthanticated)
+
     const dispatch = useDispatch()
+    const { toast } = useToast()
 
     const handleLogout = () => {
-        dispatch(UserLogout())
+        dispatch(UserLogout()).then((response) => {
+            if (response?.payload.success) {
+                toast({
+                    title: response.payload.message || "User LoggedOut Succesfully",
+                    variant: "success"
+                });
+            }
+            else {
+                toast({
+                    title: response.payload.message || "Error While LogOut",
+                    variant: "destructive"
+                });
+            }
+        })
     }
 
     return (

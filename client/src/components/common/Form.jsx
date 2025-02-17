@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../ui/select';
@@ -6,8 +6,7 @@ import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
 
 
-const CommonForm = ({ formControls, formData, setFormData, buttontext, onsubmit }) => {
-
+const CommonForm = ({ formControls, formData, setFormData, buttontext, onsubmit, isButtonDisabled }) => {
     function renderInputsByComponentType(formControlItem) {
         let element = null;
         const value = formData[formControlItem.name] || ""
@@ -15,17 +14,21 @@ const CommonForm = ({ formControls, formData, setFormData, buttontext, onsubmit 
 
         switch (formControlItem.componentType) {
             case 'input':
-                element = (<Input
-                    name={formControlItem.name}
-                    placeholder={formControlItem.placeholder}
-                    id={formControlItem.name}
-                    type={formControlItem.type}
-                    onChange={(event) => setFormData({
-                        ...formData,
-                        [formControlItem.name]: event.target.value
-                    })}
-                ></Input>)
+                element = (
+                    <Input
+                        name={formControlItem.name}
+                        placeholder={formControlItem.placeholder}
+                        id={formControlItem.name}
+                        type={formControlItem.type}
+                        value={value}
+                        onChange={(event) => setFormData({
+                            ...formData,
+                            [formControlItem.name]: event.target.value
+                        })}
+                    />
+                )
                 break
+
             case 'select':
                 element = (
                     <Select onValueChange={(value) =>
@@ -87,7 +90,7 @@ const CommonForm = ({ formControls, formData, setFormData, buttontext, onsubmit 
                             </div>
                         )
                     }
-                    <Button  type="submit" >{buttontext || 'submit'}</Button>
+                    <Button disabled={isButtonDisabled} type="submit" >{buttontext || 'submit'}</Button>
                 </div>
 
             </form>

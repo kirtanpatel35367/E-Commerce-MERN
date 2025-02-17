@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const AuthRouter = require('./routes/Auth-Route/Auth-Route')
 const AdminProductRouter = require('./routes/admin/AdminProductRoute')
+const ShopProductRouter = require('./routes/Shop/shop-routes')
 const app = express()
 
 
@@ -30,7 +31,9 @@ mongoose.connect('mongodb+srv://kp534422:Kap8537@cluster0.f0jke.mongodb.net/?ret
 
 //Auth Middleware
 app.use('/api/auth', AuthRouter)
-app.use('/api/admin/products',AdminProductRouter)
+app.use('/api/admin/products', AdminProductRouter)
+app.use('/api/shop/products', ShopProductRouter)
+
 
 
 const PORT = process.env.PORT || 9000

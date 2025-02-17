@@ -1,8 +1,7 @@
-import { Button } from "../ui/button"
+import { useEffect } from "react";
 import { Card, CardContent, CardFooter } from "../ui/card"
 
-const FetchAdminProducts = ({ product, formData, setFormData, currentEditedId, setCurrentEditedId, setOpenProductDialoge }) => {
-
+const FetchAdminProducts = ({ product, formData, setFormData, currentEditedId, setCurrentEditedId, setOpenProductDialoge,setIsEditMode,handleDeleteProduct,isFormValid }) => {
     return (
         <Card className="w-full max-w-lg mx-auto border border-gray-200 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out bg-white">
             <div>
@@ -31,16 +30,18 @@ const FetchAdminProducts = ({ product, formData, setFormData, currentEditedId, s
                 <CardFooter className="flex sm:flex-row gap-2 p-4">
                     <button
                         onClick={() => {
-                            console.log(product)
                             setOpenProductDialoge(true);
-                            setCurrentEditedId(product?._id);
+                            setCurrentEditedId(product._id);
                             setFormData(product);
-                        }}
+                            setIsEditMode(true)
+                          }}
                         className="w-full max-w-[180px] sm:max-w-none sm:w-auto px-3 py-1.5 rounded-md bg-slate-800 text-white text-sm font-medium transition-all"
                     >
-                        Edit 
+                        Edit
                     </button>
-                    <button className="w-full max-w-[180px] sm:max-w-none sm:w-auto px-3 py-1.5 rounded-md bg-slate-800 text-white text-sm font-medium  transition-all">
+                    <button  onClick={()=>{
+                        handleDeleteProduct(product?._id)
+                    }} className="w-full max-w-[180px] sm:max-w-none sm:w-auto px-3 py-1.5 rounded-md bg-slate-800 text-white text-sm font-medium  transition-all">
                         Delete
                     </button>
                 </CardFooter>

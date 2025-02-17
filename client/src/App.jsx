@@ -39,7 +39,13 @@ const App = () => {
       <div className='flex justify-center items-center h-[100vh]'><HashLoader color="#113150" />
       </div>
     ) : (<><div className='flex flex-col overflow-hidden bg-white'>
-      {/* <h1>Header Component</h1> */}
+
+
+      {
+        // (location.pathname.includes('/auth/login') || location.pathname.includes('/auth/register')) ? (<></>) : (<h1>Header Component</h1>)
+      }
+
+
 
       {/* Authantication Part */}
       <Routes>

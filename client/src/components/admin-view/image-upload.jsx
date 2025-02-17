@@ -7,9 +7,8 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { Skeleton } from "../ui/skeleton";
 
-function ProductImageUpload({ imageFile, setImagefile, uploadImageUrl, setUploadImageUrl, setImageLoadingstate, imageLoadingstate }) {
+function ProductImageUpload({ imageFile, setImagefile, uploadImageUrl, setUploadImageUrl, setImageLoadingstate, imageLoadingstate, isEditMode }) {
     const inputRef = useRef()
-
     function handleImageChange(e) {
         console.log(e.target.files)
         const selectedFile = e.target.files?.[0]
@@ -40,7 +39,7 @@ function ProductImageUpload({ imageFile, setImagefile, uploadImageUrl, setUpload
         data.append('Image_file', imageFile)
         const response = await axios.post('http://localhost:9000/api/admin/products/uploadImage', data)
         setImageLoadingstate(false)
-        if (response?.data?.sucess) { setUploadImageUrl(response.data.result.url) }
+        if (response?.data?.success) { setUploadImageUrl(response.data.result.url) }
     }
 
     useEffect(() => {
@@ -54,12 +53,13 @@ function ProductImageUpload({ imageFile, setImagefile, uploadImageUrl, setUpload
         <div className="w-full max-w-md mx-auto">
             <label className="text-lg font-semibold" htmlFor="productimage">Upload Image</label>
             <div onDragOver={handleDragOver} onDrop={handleDrop} className=" flex flex-col border-2 w-full h-32 items-center justify-center  rounded-md bg-muted/40 my-4">
-                <Input type='file' className='hidden' id='image-upload' ref={inputRef} onChange={handleImageChange}></Input>
+                <Input type='file' className='hidden' id='image-upload' ref={inputRef} onChange={handleImageChange} disabled={isEditMode}></Input>
                 {
                     !imageFile ? (
                         <label htmlFor="image-upload" className="flex flex-col items-center">
-                            <IoCloudUploadOutline className="cursor-pointer text-2xl" />
-                            <span>Drag and Drop Image Here</span>
+                            <IoCloudUploadOutline
+                                className={`${isEditMode ? 'cursor-not-allowed' : 'cursor-pointer'} text-2xl`}/>
+                                <span>Drag and Drop Image Here</span>
                         </label>
                     ) : (
                         imageLoadingstate ? (

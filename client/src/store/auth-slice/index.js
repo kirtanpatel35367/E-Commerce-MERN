@@ -15,7 +15,7 @@ export const registerUser = createAsyncThunk('/auth/register',
         const response = await axios.post('http://localhost:9000/api/auth/register', formData, {
             withCredentials: true
         })
-        //Message Return from APi Like sucess and messagef
+        //Message Return from APi Like success and messagef
         return response.data
     }
 )
@@ -36,13 +36,16 @@ export const checkAuth = createAsyncThunk('/auth/check-auth',
 //LogOut User
 export const UserLogout = createAsyncThunk('/auth/logout',
     async () => {
-        const response = await axios.post('http://localhost:9000/api/auth/logout', {
-            withCredentials: true,
-        })
+        const response = await axios.post(
+            'http://localhost:9000/api/auth/logout', 
+            {},  
+            { withCredentials: true } 
+        );
 
-        return response.data
+        return response.data;
     }
-)
+);
+
 
 
 
@@ -53,7 +56,7 @@ export const loginUser = createAsyncThunk('/auth/login',
         const response = await axios.post('http://localhost:9000/api/auth/login', formData, {
             withCredentials: true
         })
-        //Message Return from APi Like sucess and message
+        //Message Return from APi Like success and message
         return response.data
     }
 )
@@ -68,7 +71,7 @@ const authSlice = createSlice({
         setUser: (state, action) => {
 
         },
-        
+
     },
     extraReducers: (builder) => {
         builder.addCase(registerUser.pending, (state) => {
@@ -89,8 +92,8 @@ const authSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.isLoading = false,
-                    state.user = action.payload.sucess ? action.payload.user : null  //Data which API Response mean what createthunk is Respond Just Only Payload
-                state.isAuthanticated = action.payload.sucess ? true : false
+                    state.user = action.payload.success ? action.payload.user : null  //Data which API Response mean what createthunk is Respond Just Only Payload
+                state.isAuthanticated = action.payload.success ? true : false
             })
             .addCase(loginUser.rejected, (state) => {
                 state.isLoading = false,
@@ -102,8 +105,8 @@ const authSlice = createSlice({
             })
             .addCase(checkAuth.fulfilled, (state, action) => {
                 state.isLoading = false,
-                    state.user = action.payload.sucess ? action.payload.user : null  //Data which API Response mean what createthunk is Respond Just Only Payload
-                state.isAuthanticated = action.payload.sucess ? true : false
+                    state.user = action.payload.success ? action.payload.user : null  //Data which API Response mean what createthunk is Respond Just Only Payload
+                state.isAuthanticated = action.payload.success ? true : false
             })
             .addCase(checkAuth.rejected, (state) => {
                 state.isLoading = false,
@@ -114,10 +117,10 @@ const authSlice = createSlice({
                 state.isLoading = true
             })
             .addCase(UserLogout.fulfilled, (state, action) => {
-                console.log(action)
                 state.isLoading = false,
-                    state.user = null,
-                    state.isAuthanticated = false
+                state.user = null,
+                state.isAuthanticated = false
+                console.log(state.isAuthanticated)
             })
             .addCase(UserLogout.rejected, (state) => {
                 state.isLoading = false

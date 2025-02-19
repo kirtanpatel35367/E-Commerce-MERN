@@ -12,6 +12,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux';
 import { IoMdLogOut } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
+import UserCartItemWrapper from './cart-wrapper';
 
 
 
@@ -31,6 +32,7 @@ const HeaderRightContent = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector(state => state.auth);
   const navigate = useNavigate()
+  const [openCartsheet, setOpenCartSheet] = useState(false)
 
   const handleLogout = () => {
     dispatch(UserLogout());
@@ -38,10 +40,16 @@ const HeaderRightContent = () => {
 
   return (
     <div className="flex md:text-slate-800  lg:items-center lg:flex-row flex-col gap-4">
-      <Button variant="outline" size="icon">
-        <HiOutlineShoppingCart className="w-6 h-6" />
-        <span className="sr-only">User Cart</span>
-      </Button>
+
+
+      <Sheet open={openCartsheet} onOpenChange={() => setOpenCartSheet(false)}>
+        <Button onClick={()=>setOpenCartSheet(true)} variant="outline" size="icon">
+          <HiOutlineShoppingCart className="w-6 h-6" />
+          <span className="sr-only">User Cart</span>
+        </Button>
+        <UserCartItemWrapper />
+      </Sheet>
+
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -109,9 +117,9 @@ const ShoppingHeader = () => {
               </SheetHeader>
               <div>
                 <MenuItems />
-              <HeaderRightContent />
+                <HeaderRightContent />
               </div>
-              
+
             </SheetContent>
           </Sheet>
 

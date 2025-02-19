@@ -87,7 +87,7 @@ const AdminProducts = () => {
   };
 
 
-//Delete PRoduct From DB
+  //Delete PRoduct From DB
   const handleDeleteProduct = async (productId) => {
     try {
       const response = await dispatch(deleteproduct(productId));
@@ -115,11 +115,12 @@ const AdminProducts = () => {
     }
   };
 
+
   function isFormValid() {
     return Object.keys(formData)
       .map((key) => formData[key] !== '' || key === 'image' || formData[key])
       .every((item) => item);
-}
+  }
 
   useEffect(() => {
     dispatch(fetchAllProducts())

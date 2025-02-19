@@ -4,13 +4,19 @@ import axios from "axios";
 
 const initialState = {
     isLoading: false,
-    productList: []
+    productList: [],
+    productDetails: null
 }
 
 
 export const fetchShopProducts = createAsyncThunk('/shop/products/getproducts',
-    async () => {
-        const response = await axios.get('http://localhost:9000/api/shop/products/getproducts', {
+    async ({ filterParams, sortParams }) => {
+        const query = new URLSearchParams({
+            ...filterParams,
+            sortBy: sortParams
+        })
+
+        const response = await axios.get(`http://localhost:9000/api/shop/products/getproducts?${query}`, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -20,6 +26,17 @@ export const fetchShopProducts = createAsyncThunk('/shop/products/getproducts',
     }
 )
 
+
+export const getproductDetails = createAsyncThunk('/shop/product/productdetails',
+    async (id) => {
+        const response = await axios.get(`http://localhost:9000/api/shop/products/productdetails/${id}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+
+        return response?.data
+    })
 
 const ShopProductSlice = createSlice({
     name: 'shopProducts',
@@ -36,6 +53,17 @@ const ShopProductSlice = createSlice({
             .addCase(fetchShopProducts.rejected, (state, action) => {
                 state.isLoading = false,
                     state.productList = []
+            })
+            .addCase(getproductDetails.pending, (state, action) => {
+                state.isLoading = true
+            })
+            .addCase(getproductDetails.fulfilled, (state, action) => {
+                state.isLoading = false,
+                    state.productDetails = action.payload.data
+            })
+            .addCase(getproductDetails.rejected, (state, action) => {
+                state.isLoading = false,
+                    state.productDetails = null
             })
     }
 })

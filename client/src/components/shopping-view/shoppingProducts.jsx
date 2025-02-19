@@ -3,10 +3,11 @@ import { Badge } from "../ui/badge";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { BrandOptionMap, CategoryOptionMap } from "@/config";
 
-function FetchShoppingProducts({ product }) {
+function FetchShoppingProducts({ product, handleGetProductDetails }) {
+
   return (
     <Card className="w-full max-w-sm mx-auto shadow-lg rounded-lg overflow-hidden cursor-pointer transition-transform  duration-300">
-      <div className="relative group">
+      <div onClick={() => handleGetProductDetails(product?._id)} className="relative group">
         <img
           src={product?.image}
           alt={product?.title}
@@ -20,7 +21,7 @@ function FetchShoppingProducts({ product }) {
       </div>
       <CardContent className="p-4">
         <h2 className="text-lg font-semibold mb-2 truncate">{product?.title}</h2>
-        
+
         <div className="flex justify-between items-center text-gray-600 text-sm mb-2">
           <span>{CategoryOptionMap[product?.category]}</span>
           <span>{BrandOptionMap[product?.brand]}</span>
@@ -28,7 +29,7 @@ function FetchShoppingProducts({ product }) {
 
         <div className="flex justify-between items-center">
           <span className={`text-lg font-bold ${product.salePrice > 0 ? 'text-gray-500 line-through' : 'text-black'}`}>
-          ₹{product?.price}
+            ₹{product?.price}
           </span>
           {product?.salePrice > 0 && (
             <span className="text-lg font-bold "> ₹{product?.salePrice}</span>

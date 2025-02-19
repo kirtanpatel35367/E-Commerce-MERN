@@ -3,17 +3,17 @@ const Product = require('../../models/Products')
 const getFilteredProducts = async (req, res) => {
     try {
 
-        const { category = [], brand = [], sortBy = "price-lowtohigh" } = req.params
+        const { Category = [], Brand = [], sortBy = "price-lowtohigh" } = req.query
 
 
         let filters = {}
 
-        if (category.length) {
-            filters.category = { $in: category.split(',') }
+        if (Category.length) {
+            filters.category = { $in: Category.split(',') }
         }
 
-        if (brand.length) {
-            filters.brand = { $in: brand.split(',') }
+        if (Brand.length) {
+            filters.brand = { $in: Brand.split(',') }
         }
 
         let sort = {}
@@ -25,13 +25,18 @@ const getFilteredProducts = async (req, res) => {
                 break;
             case 'price-hightolow':
                 sort.price = -1
+                break;
             case 'title-atoz':
-                sort.price = 1
+                sort.title = 1
+                break;
             case 'title-ztoa':
-                sort.price = -1
+                sort.title = -1
+                break;
+            default:
+                sort.price = 1
         }
 
-        const products = await Product.find({})
+        const products = await Product.find(filters).sort(sort)
 
         res.status(200).json({
             success: true,
@@ -47,4 +52,31 @@ const getFilteredProducts = async (req, res) => {
     }
 }
 
-module.exports = { getFilteredProducts }
+
+
+const getProductDetails = async (req, res) => {
+    try {
+        const { id } = req.params
+
+        const product = await Product.findById(id)
+
+        if (!product) return res.status(404).json({
+            success: false,
+            message: "Not Valid Product Id"
+        })
+
+        return res.status(200).json({
+            success: true,
+            messsage: "Product Fetched Succesfully",
+            data: product
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Product is Fetched"
+        })
+    }
+}
+
+module.exports = { getFilteredProducts, getProductDetails }

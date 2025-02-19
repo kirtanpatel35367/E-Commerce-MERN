@@ -5,9 +5,10 @@ import { TbSortAscending } from "react-icons/tb";
 import React, { useEffect, useState } from 'react'
 import { sortOptions } from '@/config';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchShopProducts } from '@/store/product-slice';
+import { fetchShopProducts, getproductDetails } from '@/store/product-slice';
 import FetchShoppingProducts from '@/components/shopping-view/shoppingProducts';
 import { createSearchParams, useSearchParams } from 'react-router-dom';
+import ProductDetailsDialog from '@/components/shopping-view/ProductDetails';
 
 
 
@@ -24,14 +25,19 @@ function createSearchParamsHelper(filterParams) {
   return queryParams.join("&")
 }
 
+
+
+
+
 const ProductListing = () => {
 
   const dispatch = useDispatch()
-  const { productList } = useSelector(state => state.shopProducts)
+  const { productList, productDetails } = useSelector(state => state.shopProducts)
 
   const [sort, setSort] = useState(null)
   const [filter, setFilter] = useState({})
   const [searchParams, setSearchParams] = useSearchParams()
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false)
 
 
 
@@ -64,14 +70,24 @@ const ProductListing = () => {
     sessionStorage.setItem('filters', JSON.stringify(Filters))
   }
 
+  function handleGetProductDetails(productId) {
+    dispatch(getproductDetails(productId))
+  }
 
+
+  //For Open Dialog ox When User Click ON Card
+  useEffect(() => {
+    if (productDetails != null) setOpenDetailsDialog(true)
+  }, [productDetails])
+
+  //For Sorting and set Filters in Session Storage for persiatant Data
   useEffect(() => {
     setSort('price-lowtohigh')
     const filters = sessionStorage.getItem('filters');
     setFilter(filters != undefined ? JSON.parse(filters) : {});
   }, [])
 
-
+  //For Use UseParams for Filtering
   useEffect(() => {
     if (filter && Object.entries(filter).length > 0) {
       const createQueryString = createSearchParamsHelper(filter)
@@ -79,12 +95,14 @@ const ProductListing = () => {
     }
   }, [filter])
 
-
+  //Dispatch Action  fetchShopProducts for Filtering and Sorting
   useEffect(() => {
-    dispatch(fetchShopProducts())
-  }, [dispatch])
+    if (filter != null && sort != null)
+      dispatch(fetchShopProducts({ filterParams: filter, sortParams: sort }))
+  }, [dispatch, filter, sort])
 
-  console.log(searchParams)
+
+
   return (
     <>
       <div className='grid grid-cols-1 md:grid-cols-[250px_1fr] min-h-screen font-HeadFont'>
@@ -122,10 +140,11 @@ const ProductListing = () => {
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 mx-2'>
             {
               productList && productList.length > 0 ? productList.map((productItem) =>
-                <FetchShoppingProducts key={productItem._id} product={productItem} />) : <></>
+                <FetchShoppingProducts handleGetProductDetails={handleGetProductDetails} key={productItem._id} product={productItem} />) : <></>
             }
           </div>
         </div>
+        <ProductDetailsDialog open={openDetailsDialog} setOpen={setOpenDetailsDialog} productDetails={productDetails} />
       </div>
     </>
   )

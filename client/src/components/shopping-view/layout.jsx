@@ -4,10 +4,10 @@ import ShoppingHeader from './ShoppingHeader'
 
 const Shoppinglayout = () => {
     return (
-        <div className='felx flex-col bg-white overflow-hidden '>
+        <div className='felx flex-col bg-white  overflow-hidden '>
             {/* Shopping Header */}
             <ShoppingHeader />
-            <main className='flex flex-col w-full'>
+            <main className='flex flex-col w-full overflow-auto'>
                 <Outlet />
             </main>
         </div>

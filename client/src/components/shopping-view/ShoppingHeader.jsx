@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ShopLogo from '../../assets/shoplogo.png';
 import { TiThMenu } from "react-icons/ti";
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IoMdLogOut } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import UserCartItemWrapper from './cart-wrapper';
+import { fetchCartItems } from '@/store/shop/cart-slice';
 
 
 
@@ -31,6 +32,7 @@ const MenuItems = () => {
 const HeaderRightContent = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector(state => state.auth);
+  const { cartItems } = useSelector(state => state.shoppingcart)
   const navigate = useNavigate()
   const [openCartsheet, setOpenCartSheet] = useState(false)
 
@@ -38,17 +40,25 @@ const HeaderRightContent = () => {
     dispatch(UserLogout());
   };
 
+  useEffect(() => {
+    dispatch(fetchCartItems(user?.id))
+  }, [dispatch])
+
   return (
     <div className="flex md:text-slate-800  lg:items-center lg:flex-row flex-col gap-4">
 
 
       <Sheet open={openCartsheet} onOpenChange={() => setOpenCartSheet(false)}>
-        <Button onClick={()=>setOpenCartSheet(true)} variant="outline" size="icon">
-          <HiOutlineShoppingCart className="w-6 h-6" />
+        <Button onClick={() => setOpenCartSheet(true)} variant="outline" size="icon">
+          <div className='relative'>
+              <div className='absolute w-4 h-4 bg-red-600 rounded-full -top-3 left-2.5 items-center flex justify-center text-white'>{cartItems.items?.length}</div>
+            <HiOutlineShoppingCart className="w-6 h-6" />
+          </div>
           <span className="sr-only">User Cart</span>
         </Button>
-        <UserCartItemWrapper />
+        <UserCartItemWrapper cartItems={cartItems && cartItems?.items?.length > 0 ? cartItems.items : []} />
       </Sheet>
+
 
 
       <DropdownMenu>
@@ -85,7 +95,7 @@ const ShoppingHeader = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full border-b bg-slate-800">
+      <header className="sticky top-0 z-40 w-full border-b bg-[#682c0d]">
         <div className="flex h-16 items-center justify-between px-4 md:px-6">
           <Link to="/shop/home" className="flex items-center">
             <img src={ShopLogo} className="w-28 h-auto filter invert grayscale" />

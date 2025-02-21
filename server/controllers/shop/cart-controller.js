@@ -143,11 +143,11 @@ const deleteCartItem = async (req, res) => {
             })
         }
 
-        cart.items = cart.items.filter(item => item.productId._id.toString() === productId)
+        cart.items = cart.items.filter(item => item.productId._id.toString() !== productId)
 
         await cart.save()
 
-        await Cart.findOne({ userId }).populate({
+        await cart.populate({
             path: 'items.productId',
             select: "image title price salePrice totalStock"
         })
@@ -165,7 +165,7 @@ const deleteCartItem = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: "Cart Fetched Succesfully",
+            message: "Product Deleted Succesfully",
             data: {
                 ...cart._doc,
                 items: populateCartItems
@@ -176,7 +176,7 @@ const deleteCartItem = async (req, res) => {
 
 
     } catch (error) {
-        res.status(404).json({
+        res.status(500).json({
             success: false,
             message: "Error While Delete From Cart"
         })

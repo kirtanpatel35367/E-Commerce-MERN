@@ -3,7 +3,7 @@ import { Badge } from "../ui/badge";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { BrandOptionMap, CategoryOptionMap } from "@/config";
 
-function FetchShoppingProducts({ product, handleGetProductDetails }) {
+function FetchShoppingProducts({ product, handleGetProductDetails, handleAddtoCart }) {
 
   return (
     <Card className="w-full max-w-sm mx-auto shadow-lg rounded-lg overflow-hidden cursor-pointer transition-transform  duration-300">
@@ -37,7 +37,7 @@ function FetchShoppingProducts({ product, handleGetProductDetails }) {
         </div>
       </CardContent>
       <CardFooter className="p-4 border-t">
-        <Button className="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2 rounded-md">
+        <Button onClick={() => handleAddtoCart(product?._id)} className="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2 rounded-md">
           Add To Cart
         </Button>
       </CardFooter>

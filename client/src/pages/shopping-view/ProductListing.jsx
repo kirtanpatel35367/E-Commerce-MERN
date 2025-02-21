@@ -9,7 +9,8 @@ import { fetchShopProducts, getproductDetails } from '@/store/product-slice';
 import FetchShoppingProducts from '@/components/shopping-view/shoppingProducts';
 import { createSearchParams, useSearchParams } from 'react-router-dom';
 import ProductDetailsDialog from '@/components/shopping-view/ProductDetails';
-
+import { addtoCart, fetchCartItems } from '@/store/shop/cart-slice';
+import { useToast } from '@/hooks/use-toast';
 
 
 function createSearchParamsHelper(filterParams) {
@@ -33,11 +34,14 @@ const ProductListing = () => {
 
   const dispatch = useDispatch()
   const { productList, productDetails } = useSelector(state => state.shopProducts)
+  const { cartItems } = useSelector(state => state.shoppingcart)
+  const { user } = useSelector(state => state.auth)
 
   const [sort, setSort] = useState(null)
   const [filter, setFilter] = useState({})
   const [searchParams, setSearchParams] = useSearchParams()
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false)
+  const { toast } = useToast()
 
 
 
@@ -74,6 +78,19 @@ const ProductListing = () => {
     dispatch(getproductDetails(productId))
   }
 
+  //Handle Add To Cart when User Click
+  function handleAddtoCart(productId) {
+    console.log(productId)
+    dispatch(addtoCart({ userId: user?.id, productId: productId, quantity: 1 })).then((data) => {
+      if (data.payload.success) {
+        dispatch(fetchCartItems(user?.id))
+        toast({
+          title:data.payload.message,
+          variant:"success"
+        })
+      }
+    })
+  }
 
   //For Open Dialog ox When User Click ON Card
   useEffect(() => {
@@ -140,11 +157,11 @@ const ProductListing = () => {
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 mx-2'>
             {
               productList && productList.length > 0 ? productList.map((productItem) =>
-                <FetchShoppingProducts handleGetProductDetails={handleGetProductDetails} key={productItem._id} product={productItem} />) : <></>
+                <FetchShoppingProducts handleAddtoCart={handleAddtoCart} handleGetProductDetails={handleGetProductDetails} key={productItem._id} product={productItem} />) : <></>
             }
           </div>
         </div>
-        <ProductDetailsDialog open={openDetailsDialog} setOpen={setOpenDetailsDialog} productDetails={productDetails} />
+        <ProductDetailsDialog handleAddtoCart={handleAddtoCart} open={openDetailsDialog} setOpen={setOpenDetailsDialog} productDetails={productDetails} />
       </div>
     </>
   )

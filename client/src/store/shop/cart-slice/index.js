@@ -50,50 +50,49 @@ const shoppingCartSlice = createSlice(({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(addtoCart.pending, (state, action) => {
+        builder.addCase(addtoCart.pending, (state) => {
             state.isLoading = true
         })
             .addCase(addtoCart.fulfilled, (state, action) => {
-                state.isLoading = false
+                state.isLoading = false;
                 state.cartItems = action.payload.data
             })
             .addCase(addtoCart.rejected, (state, action) => {
-                state.isLoading = false,
-                    state.cartItems = []
+                state.isLoading = false;
+                state.cartItems = []
             })
-            .addCase(fetchCartItems.pending, (state, action) => {
-                state.isLoading = true,
-                    state.cartItems = action.payload.data
+            .addCase(fetchCartItems.pending, (state) => {
+                state.isLoading = true;
             })
             .addCase(fetchCartItems.fulfilled, (state, action) => {
-                state.isLoading = false,
-                    state.cartItems = action.payload.data
+                state.isLoading = false;
+                state.cartItems = action.payload.data
             })
             .addCase(fetchCartItems.rejected, (state, action) => {
-                state.isLoading = false,
-                    state.cartItems = []
+                state.isLoading = false;
+                state.cartItems = []
             })
-            .addCase(updateItemQuantity.pending, (state, action) => {
+            .addCase(updateItemQuantity.pending, (state) => {
                 state.isLoading = true
             })
             .addCase(updateItemQuantity.fulfilled, (state, action) => {
-                state.isLoading = false,
-                    state.cartItems = action.payload.data
+                state.isLoading = false;
+                state.cartItems = action.payload.data
             })
             .addCase(updateItemQuantity.rejected, (state, action) => {
-                state.isLoading = false,
-                    state.cartItems = []
+                state.isLoading = false;
+                state.cartItems = []
             })
             .addCase(deleteItem.pending, (state, action) => {
                 state.isLoading = true
             })
             .addCase(deleteItem.fulfilled, (state, action) => {
-                state.isLoading = false,
-                    state.cartItems = []
+                state.isLoading = false;
+                state.cartItems = action.payload.data
             })
             .addCase(deleteItem.rejected, (state, action) => {
-                state.isLoading = false,
-                    state.cartItems = []
+                state.isLoading = false;
+                state.cartItems = []
             })
 
 

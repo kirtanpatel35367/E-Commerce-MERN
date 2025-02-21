@@ -1,6 +1,8 @@
 import { PiListChecksFill } from "react-icons/pi";
 import { MdSpaceDashboard } from "react-icons/md";
 import { FaShoppingCart } from "react-icons/fa";
+import menImage from '../assets/menImage.jpg'
+import { icons, ShirtIcon } from "lucide-react";
 
 export const registerFormControl = [
     {
@@ -64,6 +66,16 @@ export const adminSidebarMenuItems = [
         icon: FaShoppingCart
     }
 ];
+
+export const genderwiseProducts = [
+
+    { id: "men", label: "Men", icon: ShirtIcon },
+    { id: "women", label: "Women", icon: ShirtIcon },
+    { id: "kids", label: "Kids", icon: ShirtIcon },
+    { id: "accessories", label: "Accessories", icon: ShirtIcon },
+    { id: "mobiles", label: "Mobiles", icon: ShirtIcon },
+    { id: "laptops", label: "Laptops", icon: ShirtIcon },
+]
 
 
 export const addProductFormElements = [
@@ -148,7 +160,7 @@ export const shoppingViewHeaderMenuItems = [
         path: '/shop/productList'
     },
     {
-        id: 'Mobiles',
+        id: 'mobiles',
         label: "mobiles",
         path: '/shop/productList'
     }, {
@@ -200,7 +212,7 @@ export const BrandOptionMap = {
     "h&m": "H&M",
     "samsung": "Samsung",
     "apple": "Apple",
-    "asus":"ASUS"
+    "asus": "ASUS"
 }
 
 export const filterOptions = {

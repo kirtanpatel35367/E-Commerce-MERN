@@ -6,7 +6,7 @@ import { Separator } from "../ui/separator"
 
 export function ProductFilter({ filter, handleFilter }) {
     return (
-        <div className="bg-slate-800 text-white rounded-r-md shadow-sm">
+        <div className="bg-[#682b0de7] text-white rounded-r-md shadow-sm">
             <div className="p-4 border-b">
                 <h2>Filters</h2>
             </div>

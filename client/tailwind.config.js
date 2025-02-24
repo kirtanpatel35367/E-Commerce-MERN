@@ -6,6 +6,7 @@ export default {
 		extend: {
 			fontFamily: {
 				HeadFont: ["Manrope", "serif"],
+				common:["Satisfy", "serif"]
 		  },
 			borderRadius: {
 				lg: 'var(--radius)',

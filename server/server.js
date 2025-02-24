@@ -6,6 +6,7 @@ const AuthRouter = require('./routes/Auth-Route/Auth-Route')
 const AdminProductRouter = require('./routes/admin/AdminProductRoute')
 const ShopProductRouter = require('./routes/Shop/shop-routes')
 const CartRouter = require('./routes/Shop/cart-routes')
+const AddressRouter = require('./routes/Shop/address-routes')
 const app = express()
 
 
@@ -35,6 +36,7 @@ app.use('/api/auth', AuthRouter)
 app.use('/api/admin/products', AdminProductRouter)
 app.use('/api/shop/products', ShopProductRouter)
 app.use('/api/shop/cart', CartRouter)
+app.use('/api/shop/address', AddressRouter)
 
 
 

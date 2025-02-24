@@ -56,7 +56,7 @@ const HeaderRightContent = () => {
           </div>
           <span className="sr-only">User Cart</span>
         </Button>
-        <UserCartItemWrapper cartItems={cartItems && cartItems?.items?.length > 0 ? cartItems.items : []} />
+        <UserCartItemWrapper setOpenCartSheet={setOpenCartSheet} cartItems={cartItems && cartItems?.items?.length > 0 ? cartItems.items : []} />
       </Sheet>
 
 

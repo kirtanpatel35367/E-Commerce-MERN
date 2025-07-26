@@ -14,15 +14,27 @@ const app = express()
 
 
 //CORS
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://ezbuy-client.onrender.com', // ✅ Replace with your actual Vercel domain
+];
+
 app.use(
   cors({
-    origin: "https://ezbuy-client.onrender.com", // ✅ Allow your frontend domain
+    origin: function (origin, callback) {
+      // allow requests with no origin like mobile apps or curl
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ['GET', 'POST', 'DELETE', 'PUT'],
-    allowedHeaders: ["Content-Type", "Authorization", "Cache-Control", "Expires", "Pregma"],
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Expires', 'Pragma'],
   })
 );
-
 
 //Middlereware FUnctions for Cookie Parsing and JSON Data ParSing
 app.use(cookieParser())

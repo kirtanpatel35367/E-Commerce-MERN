@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation, redirect, useNavigate,Navigate } from 'react-router-dom';
 import HashLoader from "react-spinners/ClipLoader";
 import AuthLayout from './components/auth/layout';
 import Authlogin from './pages/auth/login';
@@ -27,6 +27,7 @@ const App = () => {
   const { user, isAuthanticated, isLoading } = useSelector(state => state.auth)
   const dispatch = useDispatch()
   const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(checkAuth())
@@ -35,6 +36,9 @@ const App = () => {
   // console.log(isLoading, user)
   // console.log(location.pathname,isLoading)
 
+  if(location.pathname==="/" && !isAuthanticated){
+            return <Navigate to={'/auth/login'} />
+        }
 
   return (
     isLoading ? (

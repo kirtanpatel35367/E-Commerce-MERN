@@ -11,21 +11,21 @@ const initialState = {
 
 export const addnewAddress = createAsyncThunk('/address/Addnew',
     async (formData) => {
-        const response = await axios.post("http://localhost:9000/api/shop/address/addAddress", formData)
+        const response = await axios.post("https://ecommerce-api-e50w.onrender.com/api/shop/address/addAddress", formData)
 
         return response?.data
     })
 
 export const fetchAddresses = createAsyncThunk('/address/fetchAddress',
     async (userId) => {
-        const response = await axios.get(`http://localhost:9000/api/shop/address/fetchAddress/${userId}`)
+        const response = await axios.get(`https://ecommerce-api-e50w.onrender.com/api/shop/address/fetchAddress/${userId}`)
 
         return response?.data
     })
 
 export const editAddress = createAsyncThunk('/address/editAddress',
     async ({ userId, addressId, formData }) => {
-        const response = await axios.put(`http://localhost:9000/api/shop/address/updateAddress/${userId}/${addressId}`, formData)
+        const response = await axios.put(`https://ecommerce-api-e50w.onrender.com/api/shop/address/updateAddress/${userId}/${addressId}`, formData)
 
         return response?.data
     }
@@ -34,7 +34,7 @@ export const editAddress = createAsyncThunk('/address/editAddress',
 
 export const deleteAddress = createAsyncThunk('/address/deleteAddress',
     async ({ userId, addressId }) => {
-        const response = await axios.delete(`http://localhost:9000/api/shop/address/deleteAddress/${userId}/${addressId}`)
+        const response = await axios.delete(`https://ecommerce-api-e50w.onrender.com/api/shop/address/deleteAddress/${userId}/${addressId}`)
 
         return response?.data
     }

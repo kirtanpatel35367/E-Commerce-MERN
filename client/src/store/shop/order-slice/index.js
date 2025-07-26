@@ -11,7 +11,7 @@ export const createOrder = createAsyncThunk(
     async (OrderDetails) => {
         console.log(OrderDetails)
         const response = await axios.post(
-            "http://localhost:9000/api/shop/order/create-checkout-session",
+            "https://ecommerce-api-e50w.onrender.com/api/shop/order/create-checkout-session",
             OrderDetails,
             {
                 headers: {

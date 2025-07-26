@@ -12,7 +12,7 @@ const initialState = {
 //CreateThunk For sending Data to API from Register Form
 export const registerUser = createAsyncThunk('/auth/register',
     async (formData) => {
-        const response = await axios.post('http://localhost:9000/api/auth/register', formData, {
+        const response = await axios.post('https://ecommerce-api-e50w.onrender.com/api/auth/register', formData, {
             withCredentials: true
         })
         //Message Return from APi Like success and messagef
@@ -23,7 +23,7 @@ export const registerUser = createAsyncThunk('/auth/register',
 //CheckAuth Middleware
 export const checkAuth = createAsyncThunk('/auth/check-auth',
     async () => {
-        const response = await axios.get('http://localhost:9000/api/auth/check-auth', {
+        const response = await axios.get('https://ecommerce-api-e50w.onrender.com/api/auth/check-auth', {
             withCredentials: true,
             headers: {
                 'Cache-Control': 'no-store, no-cache,must-revalidate,proxy-revalidate'
@@ -37,7 +37,7 @@ export const checkAuth = createAsyncThunk('/auth/check-auth',
 export const UserLogout = createAsyncThunk('/auth/logout',
     async () => {
         const response = await axios.post(
-            'http://localhost:9000/api/auth/logout', 
+            'https://ecommerce-api-e50w.onrender.com/api/auth/logout', 
             {},  
             { withCredentials: true } 
         );
@@ -53,7 +53,7 @@ export const UserLogout = createAsyncThunk('/auth/logout',
 //Login User
 export const loginUser = createAsyncThunk('/auth/login',
     async (formData) => {
-        const response = await axios.post('http://localhost:9000/api/auth/login', formData, {
+        const response = await axios.post('https://ecommerce-api-e50w.onrender.com/api/auth/login', formData, {
             withCredentials: true
         })
         //Message Return from APi Like success and message

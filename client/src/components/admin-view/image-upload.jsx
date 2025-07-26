@@ -37,7 +37,7 @@ function ProductImageUpload({ imageFile, setImagefile, uploadImageUrl, setUpload
         setImageLoadingstate(true)
         const data = new FormData()
         data.append('Image_file', imageFile)
-        const response = await axios.post('http://localhost:9000/api/admin/products/uploadImage', data)
+        const response = await axios.post('https://ecommerce-api-e50w.onrender.com/api/admin/products/uploadImage', data)
         setImageLoadingstate(false)
         if (response?.data?.success) { setUploadImageUrl(response.data.result.url) }
     }

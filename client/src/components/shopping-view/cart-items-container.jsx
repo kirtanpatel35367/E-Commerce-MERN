@@ -21,7 +21,7 @@ function UserCartContainer({ cartItem }) {
             userId: user.id,
             productId: productId
         })).then((data) => {
-            if (data.payload.success) {
+            if (data?.payload?.success) {
                 toast({
                     title: data.payload.message || "Product Deleted Succesfully",
                     variant: "success"

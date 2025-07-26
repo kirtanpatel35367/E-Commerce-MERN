@@ -80,76 +80,36 @@ export const genderwiseProducts = [
 
 export const addProductFormElements = [
     {
-        label: "Title",
-        name: "title",
-        componentType: "input",
-        type: "text",
-        placeholder: "Enter product title",
-    },
-    {
-        label: "Description",
-        name: "description",
-        componentType: "textarea",
-        placeholder: "Enter product description",
-    },
-    {
-        label: "Category",
-        name: "category",
-        componentType: "select",
-        placeholder: "Select Category",
         options: [
-            { id: "men", label: "Men" },
-            { id: "women", label: "Women" },
-            { id: "kids", label: "Kids" },
-            { id: "accessories", label: "Accessories" },
-            { id: "mobiles", label: "Mobiles" },
-            { id: "laptops", label: "Laptops" },
+            { value: "men", label: "Men" },
+            { value: "women", label: "Women" },
+            { value: "kids", label: "Kids" },
+            { value: "accessories", label: "Accessories" },
+            { value: "mobiles", label: "Mobiles" },
+            { value: "laptops", label: "Laptops" },
         ],
     },
+
     {
-        label: "Brand",
-        name: "brand",
-        componentType: "select",
-        placeholder: "Select Category",
+
         options: [
-            { id: "nike", label: "Nike" },
-            { id: "adidas", label: "Adidas" },
-            { id: "puma", label: "Puma" },
-            { id: "levi", label: "Levi's" },
-            { id: "zara", label: "Zara" },
-            { id: "h&m", label: "H&M" },
+            { value: "nike", label: "Nike" },
+            { value: "adidas", label: "Adidas" },
+            { value: "puma", label: "Puma" },
+            { value: "levi", label: "Levi's" },
+            { value: "zara", label: "Zara" },
+            { value: "h&m", label: "H&M" },
             {
-                id: "samsung", label: "Samsung"
+                value: "samsung", label: "Samsung"
             },
             {
-                id: "apple", label: "Apple"
+                value: "apple", label: "Apple"
             },
             {
-                id: 'asus', label: "ASUS"
+                value: 'asus', label: "ASUS"
             }
         ],
-    },
-    {
-        label: "Price",
-        name: "price",
-        componentType: "input",
-        type: "number",
-        placeholder: "Enter product price",
-    },
-    {
-        label: "Sale Price",
-        name: "salePrice",
-        componentType: "input",
-        type: "number",
-        placeholder: "Enter sale price (optional)",
-    },
-    {
-        label: "Total Stock",
-        name: "totalStock",
-        componentType: "input",
-        type: "number",
-        placeholder: "Enter total stock",
-    },
+    }
 ]
 
 export const shoppingViewHeaderMenuItems = [

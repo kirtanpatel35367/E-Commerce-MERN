@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
@@ -7,7 +8,9 @@ const AdminProductRouter = require('./routes/admin/AdminProductRoute')
 const ShopProductRouter = require('./routes/Shop/shop-routes')
 const CartRouter = require('./routes/Shop/cart-routes')
 const AddressRouter = require('./routes/Shop/address-routes')
+const OrderRouter = require('./routes/Shop/order-routes')
 const app = express()
+
 
 
 //CORS
@@ -24,9 +27,12 @@ app.use(
 app.use(cookieParser())
 app.use(express.json())
 
+app.get('/',(req,res)=>{
+    res.status(200).send("Hello")
+})
 
 //MongoDb Connection
-mongoose.connect('mongodb+srv://kp534422:Kap8537@cluster0.f0jke.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+mongoose.connect(process.env.MONGO_DB_URL)
     .then(() => console.log("MongoDb Connected Succesfully"))
     .catch((error) => console.log(`Error While Connecting to MongoDb`, error))
 
@@ -37,6 +43,7 @@ app.use('/api/admin/products', AdminProductRouter)
 app.use('/api/shop/products', ShopProductRouter)
 app.use('/api/shop/cart', CartRouter)
 app.use('/api/shop/address', AddressRouter)
+app.use('/api/shop/order', OrderRouter)
 
 
 

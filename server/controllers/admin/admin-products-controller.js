@@ -1,3 +1,4 @@
+const Joi = require("joi");
 const { imageUploadUtils } = require("../../helpers/cloudinary")
 const Product = require('../../models/Products')
 
@@ -34,7 +35,28 @@ const handleImageUpload = async (req, res) => {
 //Add New Product
 const addNewProduct = async (req, res) => {
     try {
-        const { image, title, description, category, brand, price, salePrice, totalStock } = req.body
+
+        const NewProductSchema = Joi.object({
+            image: Joi.required(),
+            title: Joi.string().required(),
+            description: Joi.string().required(),
+            category: Joi.string().required(),
+            brand: Joi.string().required(),
+            price: Joi.number().positive().required(),
+            salePrice: Joi.number().positive().required(),
+            totalStock: Joi.number().positive().required()
+        })
+
+        // const { image, title, description, category, brand, price, salePrice, totalStock } = req.body
+
+        const { error, value } = NewProductSchema.validate(req.body)
+
+        if (error) {
+            return res.status(400).json({ message: error.details[0].message });
+        }
+
+
+        const { image, title, description, category, brand, price, salePrice, totalStock } = value
 
         if (!image || !title || !description || !category || !brand || !price || !salePrice || !totalStock) {
             return res.status(400).json({
@@ -91,10 +113,50 @@ const fetchAllProducts = async (req, res) => {
 const editNewProducts = async (req, res) => {
     try {
 
-        const { id } = req.params
-        const { image, title, description, category, brand, price, salePrice, totalStock } = req.body
+        const EditProductIdSchema = Joi.object({
+            id: Joi.string().required(),
+        })
+
+
+        const EditProductSchema = Joi.object({
+            image: Joi.string(),
+            title: Joi.string().required(),
+            description: Joi.string().required(),
+            category: Joi.string().required(),
+            brand: Joi.string().required(),
+            price: Joi.number().positive().required(),
+            salePrice: Joi.number().positive().required(),
+            totalStock: Joi.number().positive().required()
+        })
+
+        // const { id } = req.params
+        // const { image, title, description, category, brand, price, salePrice, totalStock } = req.body
+
+        const { error: paramsError, value: paramsvalue } = EditProductIdSchema.validate(req.params)
+        const { error: bodyError, value: bodyValue } = EditProductSchema.validate(req.body)
+
+        if (paramsError) {
+            return res.status(400).json({
+                success: false,
+                message: paramsError.details[0].message
+            });
+        }
+
+        if (bodyError) {
+            return res.status(400).json({
+                success: false,
+                message: bodyError.details[0].message
+            });
+        }
+
+        const { id } = paramsvalue
+        const { title, description, category, brand, price, salePrice, totalStock } = bodyValue
+
 
         const findProduct = await Product.findById(id)
+
+        console.log("product",findProduct)
+
         if (!findProduct) return res.json({
             success: false,
             message: "Product Not Found"
@@ -130,7 +192,23 @@ const editNewProducts = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
     try {
-        const { id } = req.params;
+
+        const DeleteProductSchema = Joi.object({
+            id: Joi.string().required()
+        })
+
+        // const { id } = req.params;
+
+        const { error, value } = DeleteProductSchema.validate(req.params)
+
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                message: paramsError.details[0].message
+            });
+        }
+
+        const { id } = value
 
         const findProduct = await Product.findById(id);
 

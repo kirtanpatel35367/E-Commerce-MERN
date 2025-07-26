@@ -8,8 +8,16 @@ import FetchAdminProducts from '../../components/admin-view/adminproduct'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAllProducts, addNewProduct, editProducts, deleteproduct } from '@/store/admin/product-slice'
 import { useToast } from '@/hooks/use-toast'
-
+import { Controller, useForm } from 'react-hook-form'
+import Select from 'react-select'
+import { TbH1 } from 'react-icons/tb'
 const AdminProducts = () => {
+
+  //Use React Hook Form
+
+  const { register, control, handleSubmit, watch, setValue, reset, getValues } = useForm({
+    defaultValues: {}
+  })
 
   const initialFormData = {
     image: null,
@@ -36,25 +44,27 @@ const AdminProducts = () => {
   const [isEditMode, setIsEditMode] = useState(false);
 
 
-
   //Edit and Create New Product
-  const onsubmit = async (e) => {
-
-    e.preventDefault();
+  const onSubmit = async (Data) => {
 
     currentEditedId != null ?
-
       dispatch(editProducts({
         id: currentEditedId,
         productData: {
-          ...formData
+          title: Data.title,
+          brand: Data.brand,
+          description: Data.description,
+          price: Data.price,
+          salePrice: Data.salePrice,
+          totalStock: Data.totalStock,
+          category: Data.category
         }
       })).then((response) => {
         if (response?.payload?.success) {
           dispatch(fetchAllProducts());
           setFormData(initialFormData)
           setOpenProductDialoge(false);
-
+          setCurrentEditedId(null)
           toast({
             title: "Product Edited Succesfully",
             variant: "success"
@@ -64,14 +74,14 @@ const AdminProducts = () => {
       }) :
 
       dispatch(addNewProduct({
-        ...formData,
+        ...Data,
         image: uploadImageUrl
       })).then((response) => {
         if (response?.payload?.success) {
           dispatch(fetchAllProducts());
           setOpenProductDialoge(false);
           setImagefile(null);
-          setFormData(initialFormData);
+          setFormData({});
 
           toast({
             title: response.payload.message,
@@ -124,7 +134,10 @@ const AdminProducts = () => {
 
   useEffect(() => {
     dispatch(fetchAllProducts())
-  }, [dispatch])
+    reset(formData)
+  }, [dispatch, formData])
+
+  console.log(formData)
 
 
   return (
@@ -155,7 +168,103 @@ const AdminProducts = () => {
             }</SheetTitle>
           </SheetHeader>
           <ProductImageUpload imageFile={imageFile} setImagefile={setImagefile} uploadImageUrl={uploadImageUrl} setUploadImageUrl={setUploadImageUrl} setImageLoadingstate={setImageLoadingstate} imageLoadingstate={imageLoadingstate} isEditMode={isEditMode} />
-          <CommonForm formControls={addProductFormElements} formData={formData} setFormData={setFormData} buttontext={currentEditedId != null ? "Edit" : "Add"} onsubmit={onsubmit} isButtonDisabled={!isFormValid()} />
+
+          <form action="" onSubmit={handleSubmit(onSubmit)}>
+            <div className='flex flex-col gap-3'>
+              <div className="flex flex-col">
+                <label htmlFor="title" className="text-sm font-medium">Title</label>
+                <input
+
+                  placeholder="Enter Title"
+                  type="text"
+                  {...register("title")}
+                  onChange={(e) => setValue("title", e.target.value)}
+                  className="mt-1 p-2 border rounded-md  focus:outline-none"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="description" className="text-sm font-medium">Description</label>
+                <textarea
+                  placeholder="Enter Description"
+
+                  type="text"
+                  {...register("description")}
+                  className="mt-1 p-2 border rounded-md  focus:outline-none"
+                />
+              </div>
+              <div className='flex flex-col'>
+                <label htmlFor="category" className="text-sm font-medium">Category</label>
+
+                <Controller
+                  name='category'
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      value={field.value ? { value: field.value, label: field.value } : null}
+                      options={addProductFormElements[0].options}
+                      onChange={((selectedOption) => field.onChange(selectedOption?.label))}
+                    />)}
+                />
+              </div>
+
+              <div className='flex flex-col'>
+                <label htmlFor="brand" className="text-sm font-medium">Brand</label>
+                <Controller
+                  name="brand"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      value={field.value ? { value: field.value, label: field.value } : null}
+                      options={addProductFormElements[1].options}
+                      onChange={((selectedOption) => field.onChange(selectedOption?.label))}
+                    />)}
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="price" className="text-sm font-medium">Price</label>
+                <input
+                  placeholder="Enter Price"
+                  type="number"
+                  {...register("price")}
+                  className="mt-1 p-2 border rounded-md  focus:outline-none"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="saleprice" className="text-sm font-medium">Sale Price</label>
+                <input
+                  placeholder="Enter Price"
+                  type="number"
+                  {...register("salePrice")}
+                  className="mt-1 p-2 border rounded-md  focus:outline-none"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="totalStock" className="text-sm font-medium">Total Stock</label>
+                <input
+                  placeholder="Enter Price"
+                  type="number"
+                  {...register("totalStock")}
+                  className="mt-1 p-2 border rounded-md  focus:outline-none"
+                />
+              </div>
+
+              <button
+                className="bg-[#0e1e49] text-white rounded-md px-4 py-2 cursor-pointer hover:bg-[#1e2754ea] transition-all duration-300"
+                type="submit"
+              >
+                Add New Product
+              </button>
+            </div>
+          </form>
+
+
+          {/* <CommonForm formControls={addProductFormElements} formData={formData} setFormData={setFormData} buttontext={currentEditedId != null ? "Edit" : "Add"} onsubmit={onsubmit} isButtonDisabled={!isFormValid()} /> */}
         </SheetContent>
       </Sheet>
     </>

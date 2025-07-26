@@ -97,6 +97,7 @@ const AdminProductSlice = createSlice({
             })
             .addCase(editProducts.rejected, (state) => {
                 state.isLoading = false;
+                state.productList = []
             })
             .addCase(deleteproduct.pending, (state) => {
                 state.isLoading = true;

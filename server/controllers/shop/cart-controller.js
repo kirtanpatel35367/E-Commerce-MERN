@@ -1,16 +1,27 @@
+const Joi = require('joi');
 const Cart = require('../../models/Cart')
 const Product = require('../../models/Products')
 
 const addToCart = async (req, res) => {
     try {
-        const { userId, productId, quantity } = req.body;
 
-        if (!userId || !productId || quantity <= 0) {
+        const AddtoCartSchema = Joi.object({
+            userId: Joi.string().required(),
+            productId: Joi.string().required(),
+            quantity: Joi.number().required()
+        })
+
+        const { error, value } = AddtoCartSchema.validate(req.body)
+
+        if (error) {
             return res.status(400).json({
                 success: false,
-                message: "Data is Not Given"
-            })
+                message: error.details[0].message
+            });
         }
+
+        const { userId, productId, quantity } = value
+
 
         const product = await Product.findById(productId)
 
@@ -61,7 +72,21 @@ const addToCart = async (req, res) => {
 const fetchCartItems = async (req, res) => {
     try {
 
-        const { userId } = req.params
+        const fetchCartItemsSchema = Joi.object({
+            userId: Joi.string().required()
+        })
+
+
+        const { error, value } = fetchCartItemsSchema.validate(req.params)
+
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.details[0].message
+            });
+        }
+
+        const { userId } = value
 
         if (!userId) {
             return res.status(400).json({
@@ -122,19 +147,29 @@ const fetchCartItems = async (req, res) => {
 const deleteCartItem = async (req, res) => {
     try {
 
-        const { userId, productId } = req.params
+        const deleteCartItemSchema = Joi.object({
+            userId: Joi.string().required(),
+            productId: Joi.string().required()
+        })
 
-        if (!userId || !productId) {
-            return res.status(404).json({
+        const { error, value } = deleteCartItemSchema.validate(req.params)
+
+
+        if (error) {
+            return res.status(400).json({
                 success: false,
-                message: "UserId and ProductId is Not Provided"
-            })
+                message: error.details[0].message
+            });
         }
+
+        const { userId, productId } = value
+
 
         const cart = await Cart.findOne({ userId }).populate({
             path: 'items.productId',
             select: "image title price salePrice totalStock"
         })
+
 
         if (!cart) {
             return res.status(404).json({
@@ -187,14 +222,24 @@ const deleteCartItem = async (req, res) => {
 
 const updateCartItemQuantity = async (req, res) => {
     try {
-        const { userId, productId, quantity } = req.body;
 
-        if (!userId || !productId || quantity <= 0) {
+        const updateCartItemQuantitySchema = Joi.object({
+            userId: Joi.string().required(),
+            productId: Joi.string().required(),
+            quantity: Joi.number().required()
+        })
+
+        const { error, value } = updateCartItemQuantitySchema.validate(req.body)
+
+        if (error) {
             return res.status(400).json({
                 success: false,
-                message: "Data is Not Given"
-            })
+                message: error.details[0].message
+            });
         }
+
+        const { userId, productId, quantity } = value;
+
 
         const cart = await Cart.findOne({ userId })
 

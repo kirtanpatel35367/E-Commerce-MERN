@@ -2,9 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 
-function AddressCard({ address, handleEditAddress, handleDeleteAddress }) {
+function AddressCard({ address, handleEditAddress, handleDeleteAddress, setCurrentSelectedAddress, currentSelectedAdddress }) {
+
     return (
-        <Card className='flex flex-col  justify-center'>
+        <Card onClick={() => setCurrentSelectedAddress ? setCurrentSelectedAddress(address) : null} className={`flex flex-col  justify-center ${currentSelectedAdddress?._id == address._id ? 'border-red-500' : ""}`}>
             <CardContent className="grid gap-4 p-3 cursor-pointer">
                 <Label>{address?.address}</Label>
                 <Label>{address?.city}</Label>

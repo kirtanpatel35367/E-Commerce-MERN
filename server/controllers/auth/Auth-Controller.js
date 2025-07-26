@@ -1,17 +1,27 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const Joi = require('joi')
 const User = require('../../models/User')
 
 //Register For New User
 const UserRegister = async (req, res) => {
 
-    const { username, email, password } = req.body;
+    const SignUpSchema = Joi.object({
+        username: Joi.string().alphanum().min(3).max(30).required(),
+        email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
+        password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required()
+    })
 
-    console.log(req.body)
+    const { error, value } = SignUpSchema.validate(req.body)
 
-    if (!password) {
-        return res.status(400).json({ message: "Password is required" });
+    if (error) {
+        return res.status(400).json({
+            success: false,
+            message: error.details[0].message
+        });
     }
+
+    const { username, email, password } = value
 
     try {
         const checkUser = await User.findOne({ email })
@@ -24,6 +34,7 @@ const UserRegister = async (req, res) => {
         })
 
         await newUser.save()
+        
         res.status(200).json({
             success: true,
             message: 'User Register Succesfully'
@@ -43,13 +54,29 @@ const UserRegister = async (req, res) => {
 //Login
 
 const UserLogin = async (req, res) => {
-    const { email, password } = req.body;
+
+    const LoginSchema = Joi.object({
+        email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
+        password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required()
+    })
+
+    const { error, value } = LoginSchema.validate(req.body)
+
+    if (error) {
+        return res.status(400).json({
+            success: false,
+            message: error.details[0].message
+        });
+    }
+
+    const { email, password } = value
+
 
     try {
         const checkUser = await User.findOne({ email })
         if (!checkUser) return res.json({ success: false, message: "User With This Email is Not Exits, Create New Account first!" })
 
-        
+
         const checkPassword = await bcrypt.compare(password, checkUser.password)
         if (!checkPassword) return res.json({ success: false, message: "Enter Valid Password", data: checkPassword })
 
@@ -57,7 +84,7 @@ const UserLogin = async (req, res) => {
             id: checkUser._id,
             role: checkUser.role,
             email: checkUser.email,
-            username:checkUser.username
+            username: checkUser.username
         }, 'CLIENT_SECRET_KEY', { expiresIn: '60m' })
 
         res.cookie('jwtToken', token, {
@@ -70,15 +97,15 @@ const UserLogin = async (req, res) => {
                 email: checkUser.email,
                 role: checkUser.role,
                 id: checkUser._id,
-                username:checkUser.username
+                username: checkUser.username
 
             }
         })
 
     } catch (error) {
-        res.status(500).json({
+        res.status(400).json({
             success: false,
-            message: 'User Login Failed'
+            message: error.message
         })
     }
 }
@@ -88,6 +115,7 @@ const UserLogin = async (req, res) => {
 
 const authMiddleware = (req, res, next) => {
     const token = req.cookies.jwtToken;
+
     if (!token) return res.status(401).json({
         success: false,
         message: "UnAuthorised User"

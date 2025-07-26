@@ -57,6 +57,7 @@ export const loginUser = createAsyncThunk('/auth/login',
             withCredentials: true
         })
         //Message Return from APi Like success and message
+        console.log(response)
         return response.data
     }
 )

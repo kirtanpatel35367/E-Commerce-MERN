@@ -1,3 +1,4 @@
+const Joi = require("joi")
 const Address = require("../../models/Address")
 
 
@@ -5,23 +6,29 @@ const Address = require("../../models/Address")
 const addAddress = async (req, res) => {
     try {
 
-        const { userId, address, city, pincode, phone, notes } = req.body
+        const newAddressSchema = Joi.object({
+            userId: Joi.string().required(),
+            address: Joi.string().required(),
+            city: Joi.string().required(),
+            pincode: Joi.string().pattern(/^[1-9][0-9]{5}$/).required(),
+            phone: Joi.string().pattern(/^[1-9][0-9]{9}$/).required(),
+            notes: Joi.string().required()
+        })
 
-        if (!userId || !address || !city || !pincode || !phone || !notes) {
-            return res.status(404).json({
+
+        const { error, value } = newAddressSchema.validate(req.body)
+
+
+        if (error) {
+            return res.status(400).json({
                 success: false,
-                message: "Address Data is Not Provided"
-            })
+                message: error.details[0].message
+            });
         }
 
-        const newAddress = new Address({
-            userId,
-            address,
-            city,
-            pincode,
-            phone,
-            notes
-        })
+        const { userId, address, city, pincode, phone, notes } = value
+
+        const newAddress = new Address({ userId, address, city, pincode, phone, notes })
 
         await newAddress.save()
 
@@ -41,7 +48,21 @@ const addAddress = async (req, res) => {
 
 //Fetch AlLAddress from Address Db
 const fetchAllAddress = async (req, res) => {
-    const { userId } = req.params
+
+    const fetchAddressSchema = Joi.object({
+        userId: Joi.string().required()
+    })
+
+    const { error, value } = fetchAddressSchema.validate(req.params)
+
+    if (error) {
+        return res.status(400).json({
+            success: false,
+            message: error.details[0].message
+        });
+    }
+
+    const { userId } = value
 
     if (!userId) {
         return res.status(404).json({
@@ -59,19 +80,33 @@ const fetchAllAddress = async (req, res) => {
     })
 }
 
+
+
+
 //Edit Address
 const editAddress = async (req, res) => {
     try {
 
-        const { userId, addressId } = req.params
+        const EditAddressSchema = Joi.object({
+            userId: Joi.string().required(),
+            addressId: Joi.string().required()
+        })
+
+        const { error, value } = EditAddressSchema.validate(req.params)
+
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.details[0].message
+            });
+        }
+
+        const { userId, addressId } = value
+
+
+        //Getting Data From Body
         const formData = req.body
 
-        if (!userId || !addressId) {
-            res.status(404).json({
-                success: false,
-                message: "Userid or AddressId Is not Found while Adding Address"
-            })
-        }
 
         const address = await Address.findOneAndUpdate({
             _id: addressId,
@@ -102,39 +137,47 @@ const editAddress = async (req, res) => {
 //Delete Address
 const deleteAddress = async (req, res) => {
     try {
+        const DeleteAddressSchema = Joi.object({
+            userId: Joi.string().required(),
+            addressId: Joi.string().required()
+        });
 
-        const { userId, addressId } = req.params
+        const { error, value } = DeleteAddressSchema.validate(req.params);
 
-        if (!userId || !addressId) {
-            return res.status(404).json({
+        if (error) {
+            return res.status(400).json({
                 success: false,
-                message: "Userid or AddressId Is not Found while Adding Address"
-            })
+                message: error.details[0].message
+            });
         }
 
+        const { userId, addressId } = value;
 
-        const address = await Address.findOneAndDelete({ _id: addressId, userId })
+
+        const address = await Address.findOneAndDelete({ _id: addressId, userId });
+
 
         if (!address) {
             return res.status(404).json({
                 success: false,
-                message: "Address is Not Found"
-            })
+                message: "Address not found."
+            });
         }
-
 
         return res.status(200).json({
             success: true,
-            message: "Address Deleted Succesfully",
+            message: "Address deleted successfully",
             data: address
-        })
+        });
 
     } catch (error) {
+        console.error(error);
         return res.status(500).json({
             success: false,
-            message: "Address is Not Deleted"
-        })
+            message: "Internal server error while deleting address"
+        });
     }
-}
+};
+
 
 module.exports = { addAddress, editAddress, deleteAddress, fetchAllAddress }

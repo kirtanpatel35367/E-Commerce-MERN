@@ -1,3 +1,4 @@
+const Joi = require('joi')
 const Product = require('../../models/Products')
 
 const getFilteredProducts = async (req, res) => {
@@ -56,7 +57,22 @@ const getFilteredProducts = async (req, res) => {
 
 const getProductDetails = async (req, res) => {
     try {
-        const { id } = req.params
+
+        const getProductDetailsSchema = Joi.object({
+            id: Joi.string().required()
+        })
+        // const { id } = req.params
+
+        const { error, value } = getProductDetailsSchema.validate(req.params)
+
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.details[0].message
+            });
+        }
+
+        const { id } = value
 
         const product = await Product.findById(id)
 

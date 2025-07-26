@@ -16,6 +16,8 @@ import CheckOut from './pages/shopping-view/CheckOut';
 import Accountpage from './pages/shopping-view/Accountpage';
 import CheckAuth from './components/common/CheckAuth';
 import Unauth from './pages/unAuthPage/Unauth';
+import Success from './pages/shopping-view/success'
+import Canncel from './pages/shopping-view/cancel'
 import { useDispatch, useSelector } from 'react-redux';
 import { checkAuth } from './store/auth-slice';
 
@@ -79,6 +81,9 @@ const App = () => {
           <Route path='productList' element={<ProductListing />} />
           <Route path='checkout' element={<CheckOut />} />
           <Route path='useraccount' element={<Accountpage />} />
+          <Route path='success' element={<Success/>} />
+          <Route path='cancel' element={<Canncel/>} />
+
         </Route>
         <Route path='/unauth' element={<Unauth />} />
         <Route path='*' element={<PageNotFound />}></Route>

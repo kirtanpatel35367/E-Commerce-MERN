@@ -29,12 +29,10 @@ const HomePage = () => {
   }
 
 
-  console.log(genderwiseProducts)
   useEffect(() => {
     dispatch(fetchShopProducts({ filterParams: {}, sortParams: {} }))
   }, [dispatch])
 
-  console.log(productList)
   return (
 
     <div className='flex flex-col min-h-screen '>

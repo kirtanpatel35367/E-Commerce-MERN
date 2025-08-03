@@ -11,7 +11,7 @@ const UserRegister = async (req, res) => {
       .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
       .required(),
     password: Joi.string()
-      .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+      .pattern(/^[a-zA-Z0-9@#$%^&*!()_+\-=\[\]{};':"\\|,.<>\/?]{6,30}$/)
       .required(),
   });
 
@@ -25,6 +25,8 @@ const UserRegister = async (req, res) => {
   }
 
   const { username, email, password } = value;
+
+  console.log(password)
 
   try {
     const checkUser = await User.findOne({ email });
@@ -41,6 +43,8 @@ const UserRegister = async (req, res) => {
       email,
       password: hashPassword,
     });
+
+    console.log(newUser,"New")
 
     await newUser.save();
 
@@ -65,7 +69,7 @@ const UserLogin = async (req, res) => {
       .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
       .required(),
     password: Joi.string()
-      .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+      .pattern(new RegExp(/^[a-zA-Z0-9@#$%^&*!()_+\-=\[\]{};':"\\|,.<>\/?]{6,30}$/))
       .required(),
   });
 

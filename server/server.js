@@ -14,27 +14,32 @@ const app = express()
 
 
 //CORS
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://ezbuy-client.onrender.com', // ✅ Replace with your actual Vercel domain
-];
+const allowedOrigins = ['http://localhost:5173','https://ezbuy-client.onrender.com'];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // allow requests with no origin like mobile apps or curl
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      } else {
-        return callback(new Error('Not allowed by CORS'));
-      }
-    },
-    methods: ['GET', 'POST', 'DELETE', 'PUT'],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Expires', 'Pragma'],
-  })
-);
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'Cache-Control',
+    'Expires',
+    'Pragma',
+  ],
+};
+
+app.use(cors(corsOptions));
+
+// 👇 This ensures preflight (OPTIONS) works correctly too
+app.options('*', cors(corsOptions));
+
 
 //Middlereware FUnctions for Cookie Parsing and JSON Data ParSing
 app.use(cookieParser())

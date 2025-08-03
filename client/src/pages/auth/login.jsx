@@ -23,7 +23,7 @@ const Authlogin = () => {
   const [formData, setFormData] = useState({})
 
   function onSubmit(formData) {
-
+    console.log(formData)
     setFormData(formData)
     dispatch(loginUser(formData)).then((data) => {    //Data is Payload what API Responce and Also Meta Data in This Form Data
       if (data?.payload?.success) {

@@ -14,7 +14,7 @@ const Authregister = () => {
 
     //Setting Form Data 
     const [formData, setFormData] = useState({})
-
+    console.log(formData)
     const onSubmit = (formData) => {
         setFormData(formData)
         dispatch(registerUser(formData)).then((data) => {  //Data Returned From API
@@ -48,10 +48,6 @@ const Authregister = () => {
         }
     })
 
-
-
-
-
     return (
         <div className='mx-auto w-full max-w-md space-y-6'>
             <div className='text-center'>
@@ -68,7 +64,7 @@ const Authregister = () => {
                             type="text"
                             {...register("username", {
                                 required: { value: true, message: "Username is Required" },
-                                pattern: { value: /^ [a - zA - Z0 - 9](_(?!(\.|_))|\.(?!(_|\.))|[a-zA-Z0-9]){6, 18}[a-zA-Z0-9]$/, message: "Invalid Username" }
+                                // pattern: { value: /^ [a - zA - Z0 - 9](_(?!(\.|_))|\.(?!(_|\.))|[a-zA-Z0-9]){6, 18}[a-zA-Z0-9]$/, message: "Invalid Username" }
                             })}
                             className="mt-1 p-2 border rounded-md  focus:outline-none"
                         />

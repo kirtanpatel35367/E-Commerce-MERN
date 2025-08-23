@@ -1,3 +1,4 @@
+import axiosClient from "@/api/api";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { FadeLoader } from "react-spinners";
@@ -9,11 +10,7 @@ const initialState = {
 
 export const addNewProduct = createAsyncThunk('/products/addnewproduct',
     async (productData) => {
-        const response = await axios.post('https://ecommerce-api-e50w.onrender.com/api/admin/products/addProduct', productData, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+        const response = await axiosClient.post('admin/products/addProduct', productData)
         console.log(response)
         return response?.data
     }
@@ -21,12 +18,8 @@ export const addNewProduct = createAsyncThunk('/products/addnewproduct',
 
 export const fetchAllProducts = createAsyncThunk('/products/featchallproducts',
     async () => {
-        const response = await axios.get('https://ecommerce-api-e50w.onrender.com/api/admin/products/fetchallproducts', {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-
+        const response = await axiosClient.get('admin/products/fetchallproducts')
+        
         return response?.data
     }
 )
@@ -34,8 +27,8 @@ export const fetchAllProducts = createAsyncThunk('/products/featchallproducts',
 export const editProducts = createAsyncThunk(
     '/products/editproduct',
     async ({ id, productData }) => {
-        const response = await axios.put(
-            `https://ecommerce-api-e50w.onrender.com/api/admin/products/editproduct/${id}`,
+        const response = await axiosClient.put(
+            `admin/products/editproduct/${id}`,
             productData,
             {
                 headers: { 'Content-Type': 'application/json' }
@@ -51,13 +44,16 @@ export const editProducts = createAsyncThunk(
 export const deleteproduct = createAsyncThunk('/products/deleteproduct',
     async (id, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(`https://ecommerce-api-e50w.onrender.com/api/admin/products/deleteproduct/${id}`);
+            const response = await axiosClient.delete(`admin/products/deleteproduct/${id}`);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Failed to delete product");
         }
     }
 );
+
+
+
 
 
 const AdminProductSlice = createSlice({

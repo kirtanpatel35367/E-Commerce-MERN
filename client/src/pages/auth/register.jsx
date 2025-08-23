@@ -98,7 +98,7 @@ const Authregister = () => {
                             type="password"
                             {...register("password", {
                                 required: { value: true, message: "Password is Required" },
-                                pattern: { value: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/, message: "Invalid Password" }
+                                // pattern: { value: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/, message: "Invalid Password" }
                             })}
                             className="mt-1 p-2 border rounded-md  focus:outline-none"
                         />

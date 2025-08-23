@@ -6,7 +6,7 @@ const User = require("../../models/User");
 //Register For New User
 const UserRegister = async (req, res) => {
   const SignUpSchema = Joi.object({
-    username: Joi.string().alphanum().min(3).max(30).required(),
+    username: Joi.string().min(3).max(30).required(),
     email: Joi.string()
       .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
       .required(),
@@ -26,7 +26,7 @@ const UserRegister = async (req, res) => {
 
   const { username, email, password } = value;
 
-  console.log(password)
+  console.log(password);
 
   try {
     const checkUser = await User.findOne({ email });
@@ -44,7 +44,7 @@ const UserRegister = async (req, res) => {
       password: hashPassword,
     });
 
-    console.log(newUser,"New")
+    console.log(newUser, "New");
 
     await newUser.save();
 
@@ -69,7 +69,9 @@ const UserLogin = async (req, res) => {
       .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
       .required(),
     password: Joi.string()
-      .pattern(new RegExp(/^[a-zA-Z0-9@#$%^&*!()_+\-=\[\]{};':"\\|,.<>\/?]{6,30}$/))
+      .pattern(
+        new RegExp(/^[a-zA-Z0-9@#$%^&*!()_+\-=\[\]{};':"\\|,.<>\/?]{6,30}$/)
+      )
       .required(),
   });
 
@@ -114,8 +116,8 @@ const UserLogin = async (req, res) => {
     res
       .cookie("jwtToken", token, {
         httpOnly: true,
-        secure: true,
-        sameSite: "None",
+        secure: false,
+        sameSite: "Lax",
       })
       .json({
         success: true,

@@ -1,71 +1,67 @@
-require('dotenv').config();
-const express = require('express')
-const mongoose = require('mongoose')
-const cookieParser = require('cookie-parser')
-const cors = require('cors')
-const AuthRouter = require('./routes/Auth-Route/Auth-Route')
-const AdminProductRouter = require('./routes/admin/AdminProductRoute')
-const ShopProductRouter = require('./routes/Shop/shop-routes')
-const CartRouter = require('./routes/Shop/cart-routes')
-const AddressRouter = require('./routes/Shop/address-routes')
-const OrderRouter = require('./routes/Shop/order-routes')
-const app = express()
-
-
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const AuthRouter = require("./routes/Auth-Route/Auth-Route");
+const AdminProductRouter = require("./routes/admin/AdminProductRoute");
+const ShopProductRouter = require("./routes/Shop/shop-routes");
+const CartRouter = require("./routes/Shop/cart-routes");
+const AddressRouter = require("./routes/Shop/address-routes");
+const OrderRouter = require("./routes/Shop/order-routes");
+const app = express();
 
 //CORS
-const allowedOrigins = ['http://localhost:5173','https://ezbuy-client.onrender.com'];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://ezbuy-client.onrender.com",
+];
 
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
+      callback(null, origin);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS"));
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
   allowedHeaders: [
-    'Content-Type',
-    'Authorization',
-    'Cache-Control',
-    'Expires',
-    'Pragma',
+    "Content-Type",
+    "Authorization",
+    "Cache-Control",
+    "Expires",
+    "Pragma",
   ],
 };
 
 app.use(cors(corsOptions));
-
-// 👇 This ensures preflight (OPTIONS) works correctly too
-app.options('*', cors(corsOptions));
-
+app.options("*", cors(corsOptions));
 
 //Middlereware FUnctions for Cookie Parsing and JSON Data ParSing
-app.use(cookieParser())
-app.use(express.json())
+app.use(cookieParser());
+app.use(express.json());
 
-app.get('/',(req,res)=>{
-    res.status(200).send("Hello")
-})
+app.get("/", (req, res) => {
+  res.status(200).send("Hello");
+});
 
 //MongoDb Connection
-mongoose.connect(process.env.MONGO_DB_URL)
-    .then(() => console.log("MongoDb Connected Succesfully"))
-    .catch((error) => console.log(`Error While Connecting to MongoDb`, error))
-
+mongoose
+  .connect(process.env.MONGO_DB_URL)
+  .then(() => console.log("MongoDb Connected Succesfully"))
+  .catch((error) => console.log(`Error While Connecting to MongoDb`, error));
 
 //Auth Middleware
-app.use('/api/auth', AuthRouter)
-app.use('/api/admin/products', AdminProductRouter)
-app.use('/api/shop/products', ShopProductRouter)
-app.use('/api/shop/cart', CartRouter)
-app.use('/api/shop/address', AddressRouter)
-app.use('/api/shop/order', OrderRouter)
+app.use("/api/auth", AuthRouter);
+app.use("/api/admin/products", AdminProductRouter);
+app.use("/api/shop/products", ShopProductRouter);
+app.use("/api/shop/cart", CartRouter);
+app.use("/api/shop/address", AddressRouter);
+app.use("/api/shop/order", OrderRouter);
 
-
-
-const PORT = process.env.PORT || 9000
+const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
-    console.log(`server is Running on ${PORT}`)
-})
+  console.log(`server is Running on ${PORT}`);
+});

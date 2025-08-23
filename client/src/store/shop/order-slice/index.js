@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axiosClient from "@/api/api";
 
 const initialState = {
     OrderDetails: null,
@@ -10,8 +11,8 @@ export const createOrder = createAsyncThunk(
     'order/createorder',
     async (OrderDetails) => {
         console.log(OrderDetails)
-        const response = await axios.post(
-            "https://ecommerce-api-e50w.onrender.com/api/shop/order/create-checkout-session",
+        const response = await axiosClient.post(
+            "shop/order/create-checkout-session",
             OrderDetails,
             {
                 headers: {

@@ -1,3 +1,4 @@
+import axiosClient from "@/api/api";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -16,7 +17,7 @@ export const fetchShopProducts = createAsyncThunk('/shop/products/getproducts',
             sortBy: sortParams
         })
 
-        const response = await axios.get(`https://ecommerce-api-e50w.onrender.com/api/shop/products/getproducts?${query}`, {
+        const response = await axiosClient.get(`shop/products/getproducts?${query}`, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -29,7 +30,7 @@ export const fetchShopProducts = createAsyncThunk('/shop/products/getproducts',
 
 export const getproductDetails = createAsyncThunk('/shop/product/productdetails',
     async (id) => {
-        const response = await axios.get(`https://ecommerce-api-e50w.onrender.com/api/shop/products/productdetails/${id}`, {
+        const response = await axiosClient.get(`shop/products/productdetails/${id}`, {
             headers: {
                 'Content-Type': 'application/json'
             }

@@ -30,21 +30,27 @@ const App = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(checkAuth())
+    dispatch(checkAuth());
   }, [dispatch])
 
   // console.log(isLoading, user)
   // console.log(location.pathname,isLoading)
 
-  if(location.pathname==="/" && !isAuthanticated){
-            return <Navigate to={'/auth/login'} />
-        }
-
-  return (
-    isLoading ? (
-      <div className='flex justify-center items-center h-[100vh]'><HashLoader color="#113150" />
+  // Show loading while checking authentication
+  if (isLoading) {
+    return (
+      <div className='flex justify-center items-center h-[100vh]'>
+        <HashLoader color="#113150" />
       </div>
-    ) : (<><div className='flex flex-col overflow-hidden bg-white'>
+    );
+  }
+
+  // Redirect root path to login if not authenticated
+  if(location.pathname === "/" && !isAuthanticated){
+    return <Navigate to={'/auth/login'} />
+  }
+
+  return (<><div className='flex flex-col overflow-hidden bg-white'>
 
 
       {
@@ -94,7 +100,6 @@ const App = () => {
       </Routes>
     </div>
     </>)
-  )
 }
 
 export default App

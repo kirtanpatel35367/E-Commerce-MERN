@@ -77,6 +77,7 @@ const UserLogin = async (req, res) => {
 
   const { error, value } = LoginSchema.validate(req.body);
 
+  console.log(error);
   if (error) {
     return res.status(400).json({
       success: false,
@@ -153,7 +154,7 @@ const authMiddleware = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(4001).json({
+    res.status(401).json({
       success: false,
       message: "UnAuthorised User",
     });

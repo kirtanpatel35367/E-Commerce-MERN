@@ -24,23 +24,38 @@ export const registerUser = createAsyncThunk(
 );
 
 //CheckAuth Middleware
-export const checkAuth = createAsyncThunk("/auth/check-auth", async () => {
-  const response = await axiosClient.get("auth/check-auth", {
-    withCredentials: true,
-    headers: {
-      "Cache-Control": "no-store, no-cache,must-revalidate,proxy-revalidate",
-    },
-  });
-  return response.data;
-});
+export const checkAuth = createAsyncThunk(
+  "/auth/check-auth",
+  async (_, { rejectWithValue }) => {
+    try {
+      // Check if token exists in cookies before making API call
+      const cookies = document.cookie.split(";");
+      const tokenCookie = cookies.find((cookie) =>
+        cookie.trim().startsWith("jwtToken=")
+      );
+
+      if (!tokenCookie) {
+        // No token found, return unauthenticated state without API call
+        return {
+          success: false,
+          message: "No token found",
+        };
+      }
+
+      const response = await axiosClient.get("auth/check-auth");
+      return response.data;
+    } catch (error) {
+      // Optional: Return meaningful error message
+      return rejectWithValue(
+        error.response?.data || { message: "Network error" }
+      );
+    }
+  }
+);
 
 //LogOut User
 export const UserLogout = createAsyncThunk("/auth/logout", async () => {
-  const response = await axios.post(
-    "https://ecommerce-api-e50w.onrender.com/api/auth/logout",
-    {},
-    { withCredentials: true }
-  );
+  const response = await axiosClient.post("auth/logout", {});
 
   return response.data;
 });
@@ -48,13 +63,7 @@ export const UserLogout = createAsyncThunk("/auth/logout", async () => {
 //Login User
 export const loginUser = createAsyncThunk("/auth/login", async (formData) => {
   try {
-    const response = await axios.post(
-      "https://ecommerce-api-e50w.onrender.com/api/auth/login",
-      formData,
-      {
-        withCredentials: true,
-      }
-    );
+    const response = await axiosClient.post("auth/login", formData);
     //Message Return from APi Like success and message
     console.log(response);
     return response.data;

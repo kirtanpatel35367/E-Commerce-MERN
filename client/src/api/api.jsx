@@ -6,14 +6,12 @@ const axiosClient = axios.create({
   withCredentials: true,
   headers: {
     Accept: "application/json",
-    withCredentials: true,
     "Content-Type": "application/json",
   },
 });
 
 axiosClient.interceptors.request.use(
   function (request) {
-    console.log(request)
     if (!request.url.includes("auth/login")) {
       const cookie = new Cookies();
       const token = cookie.get("jwtToken");

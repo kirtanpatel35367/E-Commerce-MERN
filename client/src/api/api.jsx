@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Cookies } from "react-cookie";
+import { toast } from "@/hooks/use-toast";
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -12,14 +13,17 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(
   function (request) {
-    if (!request.url.includes("auth/login")) {
+    if (
+      !request.url.includes("auth/login") &&
+      !request.url.includes("auth/register")
+    ) {
       const cookie = new Cookies();
       const token = cookie.get("jwtToken");
 
       if (token) {
         request.headers.Authorization = `Bearer ${token}`;
       }
-    }``
+    }
     return request;
   },
   function (error) {
@@ -44,7 +48,7 @@ axiosClient.interceptors.response.use(
     switch (res.status) {
       case 401:
         cookies.remove("jwtToken");
-        window.location.href = "/login";
+        // Don't redirect here, let the component handle it
         break;
       case 400:
         notifyError(res.data.message);

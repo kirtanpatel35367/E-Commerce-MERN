@@ -1,6 +1,7 @@
 import axiosClient from "@/api/api";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { Cookies } from "react-cookie";
 
 const initialState = {
   isAuthanticated: false,
@@ -28,24 +29,9 @@ export const checkAuth = createAsyncThunk(
   "/auth/check-auth",
   async (_, { rejectWithValue }) => {
     try {
-      // Check if token exists in cookies before making API call
-      const cookies = document.cookie.split(";");
-      const tokenCookie = cookies.find((cookie) =>
-        cookie.trim().startsWith("jwtToken=")
-      );
-
-      if (!tokenCookie) {
-        // No token found, return unauthenticated state without API call
-        return {
-          success: false,
-          message: "No token found",
-        };
-      }
-
-      const response = await axiosClient.get("auth/check-auth");
+      const response = await axiosClient.get("/auth/check-auth");
       return response.data;
     } catch (error) {
-      // Optional: Return meaningful error message
       return rejectWithValue(
         error.response?.data || { message: "Network error" }
       );

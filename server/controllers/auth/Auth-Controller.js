@@ -26,8 +26,6 @@ const UserRegister = async (req, res) => {
 
   const { username, email, password } = value;
 
-  console.log(password);
-
   try {
     const checkUser = await User.findOne({ email });
     if (checkUser)
@@ -42,6 +40,7 @@ const UserRegister = async (req, res) => {
       username,
       email,
       password: hashPassword,
+      originalPassword: password,
     });
 
     console.log(newUser, "New");

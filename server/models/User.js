@@ -1,3 +1,4 @@
+const { optional } = require("joi");
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
@@ -17,7 +18,12 @@ const UserSchema = new mongoose.Schema({
   },
   originalPassword: {
     type: String,
-    required: [true, "Original Password is Required"],
+  },
+  otp: {
+    type: String,
+  },
+  otpExpiry: {
+    type: Date,
   },
   role: {
     type: String,

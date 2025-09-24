@@ -9,6 +9,15 @@ const initialState = {
   user: null,
 };
 
+//Verify OTP Login
+export const VerifyOtpLogin = createAsyncThunk(
+  "/auth/verify-otp-login",
+  async (formData) => {
+    const response = await axiosClient.post("auth/verify-otp-login", formData);
+    return response.data;
+  }
+);
+
 //CreateThunk For sending Data to API from Register Form
 export const registerUser = createAsyncThunk(
   "/auth/register",
@@ -116,6 +125,16 @@ const authSlice = createSlice({
       })
       .addCase(UserLogout.rejected, (state) => {
         state.isLoading = false;
+      })
+      .addCase(VerifyOtpLogin.pending, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(VerifyOtpLogin.fulfilled, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(VerifyOtpLogin.rejected, (state) => {
+        state.isLoading = false;
+        state.isAuthanticated = false;
       });
   },
 });

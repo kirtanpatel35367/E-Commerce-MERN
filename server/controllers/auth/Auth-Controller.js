@@ -45,8 +45,6 @@ const UserRegister = async (req, res) => {
       originalPassword: password,
     });
 
-    console.log(newUser, "New");
-
     await newUser.save();
 
     res.status(200).json({

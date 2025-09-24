@@ -4,16 +4,18 @@ async function sendOTPEmail(email, otp) {
   let transporter = nodemailer.createTransport({
     service: "gmail", // or SMTP details
     auth: {
-      user: "pkirtan9988@gmail.com",
-      pass: "tocw enkg khae vxtz",
+      user: process.env.ADMIN_EMAIL,
+      pass: process.env.ADMIN_EMAIL_PASSWORD,
     },
   });
 
   await transporter.sendMail({
-    from: `"Your App" <pkirtan9988@gmail.com>`,
+    from: `"support@ezbuy.com"`,
     to: email,
     subject: "Your OTP Code",
-    text: `Your OTP is ${otp}. It is valid for 5 minutes.`,
+    text: `
+    Thanks For Registering on EzBuy.
+    Your OTP is ${otp}. It is valid for 5 minutes.`,
   });
 }
 

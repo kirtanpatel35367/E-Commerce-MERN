@@ -12,14 +12,14 @@ const OrderRouter = require("./routes/Shop/order-routes");
 const app = express();
 
 //CORS
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://ezbuy-client.onrender.com",
-];
+const allowedOrigins =
+  process.env.NODE_ENV === "production"
+    ? process.env.PROD_ORIGIN
+    : process.env.LOCAL_ORIGIN;
 
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (origin === allowedOrigins) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));

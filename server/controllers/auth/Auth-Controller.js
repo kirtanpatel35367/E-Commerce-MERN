@@ -2,6 +2,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 const User = require("../../models/User");
+const sendOTPEmail = require("../../helpers/sendotp");
+require("dotenv").config();
 
 //Register For New User
 const UserRegister = async (req, res) => {
@@ -62,7 +64,7 @@ const UserRegister = async (req, res) => {
 
 //Login
 
-const UserLogin = async (req, res) => {
+const VerifyOtpLogin = async (req, res) => {
   const LoginSchema = Joi.object({
     email: Joi.string()
       .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
@@ -76,7 +78,6 @@ const UserLogin = async (req, res) => {
 
   const { error, value } = LoginSchema.validate(req.body);
 
-  console.log(error);
   if (error) {
     return res.status(400).json({
       success: false,
@@ -102,33 +103,46 @@ const UserLogin = async (req, res) => {
         data: checkPassword,
       });
 
-    const token = jwt.sign(
-      {
-        id: checkUser._id,
-        role: checkUser.role,
-        email: checkUser.email,
-        username: checkUser.username,
-      },
-      "CLIENT_SECRET_KEY",
-      { expiresIn: "60m" }
-    );
+    // const token = jwt.sign(
+    //   {
+    //     id: checkUser._id,
+    //     role: checkUser.role,
+    //     email: checkUser.email,
+    //     username: checkUser.username,
+    //   },
+    //   "CLIENT_SECRET_KEY",
+    //   { expiresIn: "60m" }
+    // );
 
-    res
-      .cookie("jwtToken", token, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "Lax",
-      })
-      .json({
-        success: true,
-        message: "User Logged In SuccesFully",
-        user: {
-          email: checkUser.email,
-          role: checkUser.role,
-          id: checkUser._id,
-          username: checkUser.username,
-        },
-      });
+    // res
+    //   .cookie("jwtToken", token, {
+    //     httpOnly: true,
+    //     secure: false,
+    //     sameSite: "Lax",
+    //   })
+    //   .json({
+    //     success: true,
+    //     message: "User Logged In SuccesFully",
+    //     user: {
+    //       email: checkUser.email,
+    //       role: checkUser.role,
+    //       id: checkUser._id,
+    //       username: checkUser.username,
+    //     },
+    //   });
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    checkUser.otp = otp;
+    checkUser.otpExpiry = Date.now() + 5 * 60 * 1000; // valid for 5 mins
+    await checkUser.save();
+
+    // ✅ Send OTP via email (Nodemailer)
+    await sendOTPEmail(checkUser.email, otp);
+
+    return res.json({
+      success: true,
+      message: "OTP sent to your email. Please verify.",
+    });
   } catch (error) {
     res.status(400).json({
       success: false,
@@ -160,6 +174,65 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
+const UserLogin = async (req, res) => {
+  const { email, otp } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
+    }
+
+    // ✅ Check OTP validity
+    if (user.otp !== otp || user.otpExpiry < Date.now()) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired OTP" });
+    }
+
+    // ✅ Clear OTP fields after successful verification
+    user.otp = null;
+    user.otpExpiry = null;
+    await user.save();
+
+    // ✅ Generate JWT token
+    const token = jwt.sign(
+      {
+        id: user._id,
+        role: user.role,
+        email: user.email,
+        username: user.username,
+      },
+      process.env.CLIENT_SECRET_KEY, // use env variable
+      { expiresIn: "60m" }
+    );
+
+    res
+      .cookie("jwtToken", token, {
+        httpOnly: true,
+        secure: false, // set true in production with HTTPS
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      })
+      .json({
+        success: true,
+        message: "OTP verified, user logged in successfully",
+        user: {
+          email: user.email,
+          role: user.role,
+          id: user._id,
+          username: user.username,
+        },
+      });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 //LogOut
 
 const Userlogout = (req, res) => {
@@ -171,4 +244,10 @@ const Userlogout = (req, res) => {
 
 //Auth Middleware
 
-module.exports = { UserRegister, UserLogin, Userlogout, authMiddleware };
+module.exports = {
+  UserRegister,
+  UserLogin,
+  Userlogout,
+  authMiddleware,
+  VerifyOtpLogin,
+};

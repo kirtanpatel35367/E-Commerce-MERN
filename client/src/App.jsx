@@ -8,7 +8,7 @@ import {
   useNavigate,
   Navigate,
 } from "react-router-dom";
-import HashLoader from "react-spinners/ClipLoader";
+import HashLoader from "react-spinners/HashLoader";
 import AuthLayout from "./components/auth/layout";
 import Authlogin from "./pages/auth/login";
 import Authregister from "./pages/auth/register";

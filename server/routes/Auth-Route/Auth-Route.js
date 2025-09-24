@@ -1,17 +1,24 @@
-const express = require('express')
-const { UserRegister, UserLogin, Userlogout, authMiddleware } = require('../../controllers/auth/Auth-Controller')
-const router = express.Router()
+const express = require("express");
+const {
+  UserRegister,
+  UserLogin,
+  Userlogout,
+  authMiddleware,
+  VerifyOtpLogin,
+} = require("../../controllers/auth/Auth-Controller");
+const router = express.Router();
 
-router.post('/register', UserRegister)
-router.post('/login', UserLogin)
-router.post('/logout', Userlogout)
-router.get('/check-auth', authMiddleware, (req, res) => {
-    const user = req.user
-    res.status(200).json({
-        success: true,
-        message: "Authorised User",
-        user
-    })
-})
+router.post("/register", UserRegister);
+router.post("/login", UserLogin);
+router.post("/logout", Userlogout);
+router.post("/verify-otp-login", VerifyOtpLogin);
+router.get("/check-auth", authMiddleware, (req, res) => {
+  const user = req.user;
+  res.status(200).json({
+    success: true,
+    message: "Authorised User",
+    user,
+  });
+});
 
-module.exports = router
+module.exports = router;

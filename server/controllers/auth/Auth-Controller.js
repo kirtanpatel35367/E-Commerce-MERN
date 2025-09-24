@@ -117,7 +117,7 @@ const UserLogin = async (req, res) => {
       .cookie("jwtToken", token, {
         httpOnly: true,
         secure: true,
-        sameSite: "Lax",
+        sameSite: "None",
       })
       .json({
         success: true,

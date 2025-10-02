@@ -41,7 +41,11 @@ axiosClient.interceptors.response.use(
     const res = error.response;
 
     if (!res) {
-      notifyError("Network error or server unreachable");
+      toast({
+        title: "Error",
+        description: "Network error or server unreachable",
+        variant: "destructive",
+      });
       return Promise.reject(error);
     }
 
@@ -51,40 +55,88 @@ axiosClient.interceptors.response.use(
         // Don't redirect here, let the component handle it
         break;
       case 400:
-        notifyError(res.data.message);
+        toast({
+          title: "Error",
+          description: res.data.message,
+          variant: "destructive",
+        });
         break;
       case 403:
-        notifyError("Access Denied");
+        toast({
+          title: "Error",
+          description: "Access Denied",
+          variant: "destructive",
+        });
         break;
       case 404:
-        notifyError("Resource not found");
+        toast({
+          title: "Error",
+          description: "Resource not found",
+          variant: "destructive",
+        });
         break;
       case 408:
-        notifyError("Request Timeout");
+        toast({
+          title: "Error",
+          description: "Request Timeout",
+          variant: "destructive",
+        });
         break;
       case 409:
-        notifyError("Conflict: " + res.data.message);
+        toast({
+          title: "Error",
+          description: "Conflict: " + res.data.message,
+          variant: "destructive",
+        });
         break;
       case 422:
-        notifyError("Unprocessable Entity: " + res.data.message);
+        toast({
+          title: "Error",
+          description: "Unprocessable Entity: " + res.data.message,
+          variant: "destructive",
+        });
         break;
       case 429:
-        notifyError("Too many requests. Please try again later.");
+        toast({
+          title: "Error",
+          description: "Too many requests. Please try again later.",
+          variant: "destructive",
+        });
         break;
       case 500:
-        notifyError("Internal Server Error");
+        toast({
+          title: "Error",
+          description: "Internal Server Error",
+          variant: "destructive",
+        });
         break;
       case 502:
-        notifyError("Bad Gateway");
+        toast({
+          title: "Error",
+          description: "Bad Gateway",
+          variant: "destructive",
+        });
         break;
       case 503:
-        notifyError("Service Unavailable");
+        toast({
+          title: "Error",
+          description: "Service Unavailable",
+          variant: "destructive",
+        });
         break;
       case 504:
-        notifyError("Gateway Timeout");
+        toast({
+          title: "Error",
+          description: "Gateway Timeout",
+          variant: "destructive",
+        });
         break;
       default:
-        notifyError("An unexpected error occurred");
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred",
+          variant: "destructive",
+        });
         break;
     }
 

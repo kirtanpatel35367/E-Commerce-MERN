@@ -4,6 +4,30 @@ const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
 async function sendOTPEmail(email, otp) {
+  console.log("=== Environment Check ===");
+  console.log("ADMIN_EMAIL:", process.env.ADMIN_EMAIL);
+  console.log("GMAIL_CLIENT_ID length:", process.env.GMAIL_CLIENT_ID?.length);
+  console.log(
+    "GMAIL_CLIENT_ID preview:",
+    process.env.GMAIL_CLIENT_ID?.substring(0, 20) + "..."
+  );
+  console.log(
+    "GMAIL_CLIENT_SECRET length:",
+    process.env.GMAIL_CLIENT_SECRET?.length
+  );
+  console.log(
+    "GMAIL_CLIENT_SECRET preview:",
+    process.env.GMAIL_CLIENT_SECRET?.substring(0, 10) + "..."
+  );
+  console.log(
+    "GMAIL_REFRESH_TOKEN length:",
+    process.env.GMAIL_REFRESH_TOKEN?.length
+  );
+  console.log(
+    "GMAIL_REFRESH_TOKEN preview:",
+    process.env.GMAIL_REFRESH_TOKEN?.substring(0, 10) + "..."
+  );
+  console.log("========================\n");
   try {
     const oauth2Client = new OAuth2(
       process.env.GMAIL_CLIENT_ID,

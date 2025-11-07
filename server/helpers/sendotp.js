@@ -1,12 +1,31 @@
 const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
+
+const OAuth2 = google.auth.OAuth2;
 
 async function sendOTPEmail(email, otp) {
   try {
+    const oauth2Client = new OAuth2(
+      process.env.GMAIL_CLIENT_ID,
+      process.env.GMAIL_CLIENT_SECRET,
+      "https://developers.google.com/oauthplayground"
+    );
+
+    oauth2Client.setCredentials({
+      refresh_token: process.env.GMAIL_REFRESH_TOKEN,
+    });
+
+    const accessToken = await oauth2Client.getAccessToken();
+
     let transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.ADMIN_EMAIL, // your gmail
-        pass: process.env.ADMIN_EMAIL_PASSWORD, // your app password
+        type: "OAuth2",
+        user: process.env.ADMIN_EMAIL,
+        clientId: process.env.GMAIL_CLIENT_ID,
+        clientSecret: process.env.GMAIL_CLIENT_SECRET,
+        refreshToken: process.env.GMAIL_REFRESH_TOKEN,
+        accessToken: accessToken.token,
       },
     });
 
@@ -14,16 +33,17 @@ async function sendOTPEmail(email, otp) {
       from: `"EzBuy Support" <${process.env.ADMIN_EMAIL}>`,
       to: email,
       subject: "Your OTP Code",
-      text: `
-        Thanks for registering on EzBuy.
-        Your OTP is ${otp}. It is valid for 5 minutes.
+      html: `
+        <h3>Thanks for registering on EzBuy</h3>
+        <p>Your OTP is <strong>${otp}</strong></p>
+        <p>It is valid for 5 minutes.</p>
       `,
     });
 
     console.log("OTP email sent to:", email);
   } catch (err) {
     console.error("Error sending OTP email:", err);
-    throw err; // so frontend sees the error
+    throw err;
   }
 }
 
